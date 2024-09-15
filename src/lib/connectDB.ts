@@ -21,7 +21,11 @@ export const connectDB = async (): Promise<Db> => {
       await client.connect();
       console.log("Connected to MongoDB");
     }
-    db = client.db("doctorsPortal");
+    const dbName = process.env.MONGODB_ID;
+    if (!dbName) {
+      throw new Error("MONGODB_ID environment variable is not set");
+    }
+    db = client.db(dbName);
     return db;
   } catch (error) {
     console.error("Failed to connect to MongoDB", error);
