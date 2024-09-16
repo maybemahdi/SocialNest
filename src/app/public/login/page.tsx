@@ -13,10 +13,13 @@ const Page: React.FC = () => {
     const { status } = useSession();
 
     useEffect(() => {
+        if (status === "loading") {
+            return;
+        }
         if (status === "authenticated") {
-            router.push("/private/home")
+            router.push("/private/home");
         } else {
-            setExtraLoading(false)
+            setExtraLoading(false);
         }
     }, [status, router]);
 

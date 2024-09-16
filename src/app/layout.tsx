@@ -4,7 +4,6 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import AuthProvider from "@/providers/AuthProvider";
-import PrivateRoute from "@/lib/PrivateRoute";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -22,15 +21,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  
   return (
     <html lang="en" className="bg-white">
       <body className={poppins.className}>
         <Toaster />
         <AuthProvider>
-          <PrivateRoute>
-            <div>//////</div>
             {children}
-          </PrivateRoute>
         </AuthProvider>
       </body>
     </html>
