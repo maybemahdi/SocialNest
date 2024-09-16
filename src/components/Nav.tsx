@@ -46,7 +46,7 @@ const Nav: React.FC = () => {
     <nav className="w-full md:py-3 py-2 bg-white shadow-md">
       <div className="flex justify-between items-center mx-auto w-[95%] py-4">
         <div>
-          <Link href="/" className="font-bold text-xl text-secondary">
+          <Link href="/private/home" className="font-bold text-xl text-secondary">
             SocialNest
           </Link>
         </div>
@@ -133,14 +133,12 @@ const Nav: React.FC = () => {
               Login
             </Link>
           ) : (
-            <li>
               <button
                 onClick={handleSignOut}
-                className="px-4 py-2 rounded-md hover:bg-secondary text-sm hover:text-black transition-all duration-300"
+                className="px-12 py-2 rounded-md bg-secondary text-sm text-white transition-all duration-300"
               >
-                <IoLogOut />
+                <IoLogOut size={25} />
               </button>
-            </li>
           )}
         </div>
       </div>

@@ -4,21 +4,42 @@ import axios from 'axios';
 import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { ImSpinner9 } from 'react-icons/im';
+import { RxCross1 } from 'react-icons/rx';
+
+const imgbb_api_key = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+const img_hosting_api = `https://api.imgbb.com/1/upload?key=${imgbb_api_key}`;
 
 const Page: React.FC = () => {
     const router = useRouter();
     const { status } = useSession();
     const [isLoading, setIsLoading] = useState(false)
+    const [extraLoading, setExtraLoading] = useState(true)
+    const [imgLoading, setImgLoading] = useState(false)
+    const [imageUrl, setImageUrl] = useState<string | null>(null)
+
+    useEffect(() => {
+        if (status === "authenticated") {
+            router.push("/private/home");
+        } else if (status === "unauthenticated") {
+            router.push("/public/register")
+            setExtraLoading(false);
+        }
+    }, [status, router]);
 
     const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!imageUrl) {
+            toast.error("Upload your Profile Picture");
+            return;
+        }
         const form = e.target as HTMLFormElement;
         const name = (form.elements.namedItem('name') as HTMLInputElement).value;
         const email = (form.elements.namedItem('email') as HTMLInputElement).value;
         const password = (form.elements.namedItem('password') as HTMLInputElement).value;
-        const newUser = { name, email, password };
+        const newUser = { name, email, password, imageUrl };
 
         try {
             setIsLoading(true)
@@ -55,21 +76,41 @@ const Page: React.FC = () => {
         }
     };
 
+    // handle image
+    const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (!files || files.length === 0) {
+            toast.error("No file selected");
+            return;
+        }
+
+        const image = files[0];
+        const formData = new FormData();
+        formData.append("image", image);
+        try {
+            setImgLoading(true);
+            const { data } = await axios.post(img_hosting_api, formData);
+            console.log(data)
+            setImgLoading(false);
+            setImageUrl(data.data.display_url);
+        } catch (error) {
+            console.log(error);
+            toast.error("Problem while uploading image!");
+            setImgLoading(false);
+        }
+    };
+
     const handleSocialSignIn = async (provider: string) => {
         await signIn(provider, { callbackUrl: "/private/home" });
     };
 
-    if(isLoading || status === "loading") {
-        return <Loading />
-    }
 
-    if (status === "authenticated") {
-        router.push("/private/home");
+    if (isLoading || status === "loading" || extraLoading) {
+        return <Loading />
     }
     return (
         <div
-            style={{ minHeight: "calc(100vh - 115px)" }}
-            className="flex flex-col items-center justify-center"
+            className="flex flex-col items-center justify-center min-h-screen text-secondary"
         >
             <div className="rounded shadow-md md:w-[30%] w-full mx-auto p-5">
                 <h3 className="text-2xl text-center mb-5">Register</h3>
@@ -88,6 +129,45 @@ const Page: React.FC = () => {
                         placeholder="Enter Your Email"
                         required
                     />
+                    <div className="form-group w-full">
+                        {imgLoading && imageUrl === null ? (
+                            <div className="h-[49px] flex items-center justify-center bg-slate-200 rounded-md">
+                                <ImSpinner9 className="animate-spin m-auto" size={24} />
+                            </div>
+                        ) : (
+                            <div className="relative">
+                                {/* Custom button-styled label */}
+                                <label
+                                    htmlFor="imageUpload"
+                                    className={`flex items-center justify-center w-full h-[49px] bg-slate-200 border border-gray-300 rounded-lg text-gray-700 cursor-pointer hover:bg-gray-300 transition-all duration-200 $ disabled:cursor-not-allowed`}
+                                >
+                                    {imageUrl ? "Image Uploaded" : "Upload an Image"}
+                                    {imageUrl && <span className="h-[48.8px] flex items-center justify-center px-2">
+                                        <RxCross1
+                                            title='Cancel Upload'
+                                            onClick={() => {
+                                                setImageUrl(null);
+                                            }}
+                                            className="cursor-pointer shadow-2xl rounded-full"
+                                            color="#f43f5e"
+                                        />
+                                    </span>}
+                                </label>
+
+                                {/* Hidden file input */}
+                                <input
+                                    id="imageUpload"
+                                    type="file"
+                                    name="image"
+                                    disabled={!!imageUrl}
+                                    onChange={handleImage}
+                                    accept="image/*"
+                                    className="hidden"
+                                />
+                            </div>
+                        )}
+                    </div>
+
                     <input
                         type="password"
                         name="password"
@@ -96,7 +176,7 @@ const Page: React.FC = () => {
                         required
                     />
                     <p className="text-[10px] ml-1 cursor-pointer">Forget Password?</p>
-                    <button className="w-full bg-gray-700 rounded text-white p-2">
+                    <button disabled={imgLoading} className="w-full bg-secondary rounded text-white p-2">
                         Register
                     </button>
                 </form>
@@ -115,7 +195,7 @@ const Page: React.FC = () => {
                 </div>
                 <button
                     onClick={() => handleSocialSignIn("google")}
-                    className="w-full text-gray-600 border hover:text-white hover:bg-gray-600 transition-all duration-300 border-gray-600 rounded p-2"
+                    className="w-full text-gray-600 border hover:text-white hover:bg-secondary transition-all duration-300 border-gray-600 rounded p-2"
                 >
                     Continue with Google
                 </button>

@@ -28,6 +28,7 @@ export default function RootLayout({
         <Toaster />
         <AuthProvider>
           <PrivateRoute>
+            <div>//////</div>
             {children}
           </PrivateRoute>
         </AuthProvider>
