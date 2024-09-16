@@ -10,7 +10,7 @@ const Page: React.FC = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false)
     const [extraLoading, setExtraLoading] = useState(true)
-    const { status } = useSession()
+    const { status } = useSession();
 
     useEffect(() => {
         if (status === "authenticated") {

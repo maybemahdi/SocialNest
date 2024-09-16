@@ -1,10 +1,13 @@
 // app/protected/layout.tsx
-import React from 'react';
+"use client"
+import React, { useEffect } from 'react';
 import { Poppins } from 'next/font/google';
 import AuthProvider from '@/providers/AuthProvider';
 import Nav from '@/components/Nav';
 import { Toaster } from 'react-hot-toast';
-import PrivateRoute from '@/lib/PrivateRoute';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import Loading from '@/components/Loading';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -17,15 +20,24 @@ export default function PrivateLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "loading") return;
+    if (status === "unauthenticated") {
+      router.push("/public/login");
+    }
+  }, [status, router]);
+
+  if (status === "loading") return <Loading />;
   return (
     <html lang="en" className="bg-white">
       <body className={poppins.className}>
         <Toaster />
         <AuthProvider>
-          <PrivateRoute>
-            <Nav />
-            <div className="w-[95%] mx-auto mt-5">{children}</div>
-          </PrivateRoute>
+          <Nav />
+          <div className="w-[95%] mx-auto mt-5">{children}</div>
         </AuthProvider>
       </body>
     </html>

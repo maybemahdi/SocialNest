@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 const Nav: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const { data: session } = useSession();
-  const pathname = usePathname(); // Get current pathname
+  const pathname = usePathname();
 
   const navLinks = [
     { name: "Home", path: "/private/home" },
@@ -133,12 +133,12 @@ const Nav: React.FC = () => {
               Login
             </Link>
           ) : (
-              <button
-                onClick={handleSignOut}
-                className="px-12 py-2 rounded-md bg-secondary text-sm text-white transition-all duration-300"
-              >
-                <IoLogOut size={25} />
-              </button>
+            <button
+              onClick={handleSignOut}
+              className="px-12 py-2 rounded-md bg-secondary text-sm text-white transition-all duration-300"
+            >
+              <IoLogOut size={25} />
+            </button>
           )}
         </div>
       </div>
