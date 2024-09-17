@@ -16,16 +16,20 @@ const Page: React.FC = () => {
     const router = useRouter();
     const { status } = useSession();
     const [isLoading, setIsLoading] = useState(false)
-    const [extraLoading, setExtraLoading] = useState(true) 
+    const [extraLoading, setExtraLoading] = useState(true)
     const [imgLoading, setImgLoading] = useState(false)
     const [imageUrl, setImageUrl] = useState<string | null>(null)
+
+    useEffect(() => {
+        document.title = status === "authenticated" ? "Redirecting..." : "SocialNest | Register";
+    }, [status]);
 
     useEffect(() => {
         if (status === "loading") {
             // While session is loading, don't redirect
             return;
         }
-    
+
         if (status === "authenticated") {
             router.push("/private/home");
         } else {

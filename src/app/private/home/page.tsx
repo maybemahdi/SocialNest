@@ -1,6 +1,10 @@
 import React from 'react';
 
-const Page:React.FC = () => {
+export const metadata = {
+    title: "SocialNst | Home",
+};
+
+const Page: React.FC = () => {
     return (
         <div>
             Home

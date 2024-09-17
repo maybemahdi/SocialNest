@@ -6,11 +6,16 @@ import { useRouter } from "next/navigation";
 import React, { FormEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+
 const Page: React.FC = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false)
     const [extraLoading, setExtraLoading] = useState(true)
     const { status } = useSession();
+
+    useEffect(() => {
+        document.title = status === "authenticated" ? "Redirecting..." : "SocialNest | Login";
+    }, [status]);
 
     useEffect(() => {
         if (status === "loading") {
