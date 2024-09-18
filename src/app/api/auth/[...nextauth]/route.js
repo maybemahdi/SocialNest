@@ -1,4 +1,5 @@
 import { connectDB } from "@/lib/connectDB";
+import { generateRandomUsername } from "@/lib/generateUsername";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -42,6 +43,25 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
+    async jwt({ token, user, account }) {
+      // This callback is triggered when a user is authenticated
+      if (user) {
+        token.id = user._id; // Add user ID to token
+        token.role = user.role || "user"; // Add role to token (default to 'user')
+        token.provider = account.provider; // Add provider info
+        token.userName = user.userName; // Add username
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Add extra properties to session object from token
+      session.user.id = token.id;
+      session.user.role = token.role; // Add role to session
+      session.user.userName = token.userName; // Add username to session
+      session.user.provider = token.provider; // Add provider to session
+
+      return session;
+    },
     async signIn({ user, account }) {
       if (account.provider === "google") {
         const { email } = user;
@@ -53,7 +73,13 @@ const handler = NextAuth({
             provider: "google",
           });
           if (!isUserExist) {
-            await userCollection.insertOne({ ...user, provider: "google" });
+            const userName = generateRandomUsername(user?.name);
+            await userCollection.insertOne({
+              ...user,
+              provider: "google",
+              userName,
+              role: "user",
+            });
             return user;
           } else {
             return user;

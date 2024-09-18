@@ -1,9 +1,10 @@
 // app/layout.tsx
-import type { Metadata } from "next";
+"use client"
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import AuthProvider from "@/providers/AuthProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -11,24 +12,21 @@ const poppins = Poppins({
   weight: ["300", "400", "700", "800", "900"],
 });
 
-export const metadata: Metadata = {
-  title: "SocialNest",
-  description: "A Social Media App",
-};
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  
+  const queryClient = new QueryClient()
   return (
     <html lang="en" className="bg-white">
       <body className={poppins.className}>
         <Toaster />
-        <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
             {children}
-        </AuthProvider>
+          </AuthProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );

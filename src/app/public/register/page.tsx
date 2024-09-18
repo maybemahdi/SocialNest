@@ -1,5 +1,6 @@
 "use client"
 import Loading from '@/components/Loading';
+import { generateRandomUsername } from '@/lib/generateUsername';
 import axios from 'axios';
 import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -45,9 +46,10 @@ const Page: React.FC = () => {
         }
         const form = e.target as HTMLFormElement;
         const name = (form.elements.namedItem('name') as HTMLInputElement).value;
+        const userName = generateRandomUsername(name);
         const email = (form.elements.namedItem('email') as HTMLInputElement).value;
         const password = (form.elements.namedItem('password') as HTMLInputElement).value;
-        const newUser = { name, email, password, imageUrl };
+        const newUser = { name, userName, email, password, imageUrl, role: "user" };
 
         try {
             setIsLoading(true)
@@ -127,7 +129,7 @@ const Page: React.FC = () => {
                         type="text"
                         name="name"
                         className="w-full border p-3 rounded"
-                        placeholder="Enter Your Name"
+                        placeholder="Enter Your Full Name"
                         required
                     />
                     <input

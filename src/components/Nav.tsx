@@ -18,6 +18,8 @@ const Nav: React.FC = () => {
   const { data: session } = useSession();
   const pathname = usePathname();
 
+  // console.log(session)
+
   const navLinks = [
     { name: "Home", path: "/private/home" },
     { name: "Friends", path: "/private/friends" },
@@ -43,7 +45,7 @@ const Nav: React.FC = () => {
   };
 
   return (
-    <nav className="w-full md:py-3 py-2 bg-white shadow-md">
+    <nav className="w-full md:py-3 py-2 bg-white shadow-md sticky top-0">
       <div className="flex justify-between items-center mx-auto w-[95%] py-4">
         <div>
           <Link href="/private/home" className="font-bold text-xl text-secondary">
