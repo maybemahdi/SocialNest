@@ -8,6 +8,7 @@ import { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Loading from '@/components/Loading';
+import useAuth from '@/Hooks/useAuth';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -21,16 +22,17 @@ export default function PrivateLayout({
   children: React.ReactNode;
 }) {
   const { status } = useSession();
+  const {loading} = useAuth()
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "loading") return;
+    if (status === "loading" || loading) return;
     if (status === "unauthenticated") {
       router.push("/public/login");
     }
-  }, [status, router]);
+  }, [status, router, loading]);
 
-  if (status === "loading") return <Loading />;
+  if (status === "loading" || loading) return <Loading />;
   return (
     <html lang="en" className="bg-white">
       <body className={poppins.className}>

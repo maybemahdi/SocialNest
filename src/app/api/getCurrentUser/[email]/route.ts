@@ -19,5 +19,6 @@ export const GET = async (
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
     console.log(error);
+    return NextResponse.json(error);
   }
 };

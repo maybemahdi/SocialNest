@@ -38,7 +38,7 @@ const Nav: React.FC = () => {
       confirmButtonText: "Yes, Sign Out!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        toast.success("Log Out Successfull")
+        toast.success("Log Out Successful")
         await signOut({ callbackUrl: "/public/login" });
       }
     });

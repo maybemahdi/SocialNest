@@ -49,7 +49,7 @@ const Page: React.FC = () => {
         const userName = generateRandomUsername(name);
         const email = (form.elements.namedItem('email') as HTMLInputElement).value;
         const password = (form.elements.namedItem('password') as HTMLInputElement).value;
-        const newUser = { name, userName, email, password, imageUrl, role: "user" };
+        const newUser = { name, userName, email, password, image: imageUrl, role: "user" };
 
         try {
             setIsLoading(true)
