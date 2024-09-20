@@ -120,7 +120,7 @@ const Page: React.FC = () => {
     }
     return (
         <div
-            className="flex flex-col items-center justify-center min-h-screen text-secondary"
+            className="flex flex-col items-center justify-center min-h-screen text-[#16423C]"
         >
             <div className="rounded shadow-md md:w-[30%] w-full mx-auto p-5">
                 <h3 className="text-2xl text-center mb-5">Register</h3>

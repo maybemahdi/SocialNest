@@ -48,7 +48,7 @@ const Nav: React.FC = () => {
     <nav className="w-full md:py-3 py-2 bg-white shadow-md sticky top-0">
       <div className="flex justify-between items-center mx-auto w-[95%] py-4">
         <div>
-          <Link href="/private/home" className="font-bold text-xl text-secondary">
+          <Link href="/private/home" className="font-bold text-xl text-[#16423C]">
             SocialNest
           </Link>
         </div>
@@ -60,7 +60,7 @@ const Nav: React.FC = () => {
                   href={link.path}
                   className={
                     pathname === link.path
-                      ? "text-secondary"
+                      ? "text-[#16423C]"
                       : "text-slate-500"
                   }
                 >
@@ -112,8 +112,8 @@ const Nav: React.FC = () => {
                 href={link.path}
                 className={
                   pathname === link.path
-                    ? "text-secondary font-bold"
-                    : "text-black hover:text-secondary transition-all duration-300"
+                    ? "text-[#16423C] font-bold"
+                    : "text-black hover:text-[#16423C] transition-all duration-300"
                 }
                 onClick={() => setOpen(false)} // Close menu on link click
               >
