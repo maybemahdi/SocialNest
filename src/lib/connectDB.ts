@@ -6,8 +6,12 @@ let client: MongoClient | undefined;
 
 export const connectDB = async (): Promise<Db> => {
   if (db) return db;
+  
+  //org
+  const uri:string = process.env.MONGODB_URI_ORG || "mongodb://localhost:27017/";
 
-  const uri = `mongodb+srv://${process.env.MONGODB_ID}:${process.env.MONGODB_PASS}@cluster0.nrdgddr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+  // local compass
+  // const uri = "mongodb://localhost:27017/";
 
   try {
     if (!client) {
