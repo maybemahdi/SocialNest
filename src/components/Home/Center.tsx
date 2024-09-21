@@ -23,17 +23,17 @@ const Center = () => {
                 <div className='flex items-center gap-5'>
                     <div className='flex items-center gap-2 p-2 hover:bg-slate-200 transition-all duration-300 rounded-md cursor-pointer'>
                         <IoMdPhotos className='text-green-700' size={30} />
-                        <p className='text-base text-[#16423C] font-medium'>Photo/Video</p>
+                        <p className='text-base text-main font-medium'>Photo/Video</p>
                     </div>
                     <div title='Coming Soon' className='flex items-center gap-2 p-2 hover:bg-slate-200 transition-all duration-300 rounded-md cursor-not-allowed'>
                         <RiLiveFill className='text-rose-500' size={30} />
-                        <p className='text-base text-[#16423C] font-medium'>Go live</p>
+                        <p className='text-base text-main font-medium'>Go live</p>
                     </div>
                 </div>
             </div>
             {/* story section  */}
             <div className='my-3'>
-                <StorySlider />
+                <StorySlider user={user} />
             </div>
         </div>
     );

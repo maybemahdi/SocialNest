@@ -120,7 +120,7 @@ const Page: React.FC = () => {
     }
     return (
         <div
-            className="flex flex-col items-center justify-center min-h-screen text-[#16423C]"
+            className="flex flex-col items-center justify-center min-h-screen text-main"
         >
             <div className="rounded shadow-md md:w-[30%] w-full mx-auto p-5">
                 <h3 className="text-2xl text-center mb-5">Register</h3>
@@ -186,7 +186,7 @@ const Page: React.FC = () => {
                         required
                     />
                     <p className="text-[10px] ml-1 cursor-pointer">Forget Password?</p>
-                    <button disabled={imgLoading} className="w-full bg-secondary rounded text-white p-2">
+                    <button disabled={imgLoading} className="w-full bg-main rounded text-white p-2">
                         Register
                     </button>
                 </form>
@@ -205,7 +205,7 @@ const Page: React.FC = () => {
                 </div>
                 <button
                     onClick={() => handleSocialSignIn("google")}
-                    className="w-full text-gray-600 border hover:text-white hover:bg-secondary transition-all duration-300 border-gray-600 rounded p-2"
+                    className="w-full text-gray-600 border hover:text-white hover:bg-main transition-all duration-300 border-gray-600 rounded p-2"
                 >
                     Continue with Google
                 </button>

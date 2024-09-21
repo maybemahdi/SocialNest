@@ -48,7 +48,7 @@ const Nav: React.FC = () => {
     <nav className="w-full md:py-3 py-2 bg-white shadow-md sticky top-0">
       <div className="flex justify-between items-center mx-auto w-[95%] py-4">
         <div>
-          <Link href="/private/home" className="font-bold text-xl text-[#16423C]">
+          <Link href="/private/home" className="font-bold text-xl text-main">
             SocialNest
           </Link>
         </div>
@@ -60,7 +60,7 @@ const Nav: React.FC = () => {
                   href={link.path}
                   className={
                     pathname === link.path
-                      ? "text-[#16423C]"
+                      ? "text-main"
                       : "text-slate-500"
                   }
                 >
@@ -79,8 +79,8 @@ const Nav: React.FC = () => {
               href={"/login"}
               className={
                 pathname === "/login"
-                  ? "bg-secondary text-sm text-white px-4 py-2 rounded-md"
-                  : "bg-secondary text-sm text-white px-4 py-2 rounded transition-all duration-300"
+                  ? "bg-main text-sm text-white px-4 py-2 rounded-md"
+                  : "bg-main text-sm text-white px-4 py-2 rounded transition-all duration-300"
               }
             >
               Login
@@ -89,7 +89,7 @@ const Nav: React.FC = () => {
             <button
               title="Log Out"
               onClick={handleSignOut}
-              className="px-4 py-2 rounded-md bg-secondary text-sm text-white transition-all duration-300"
+              className="px-4 py-2 rounded-md bg-main text-sm text-white transition-all duration-300"
             >
               <IoLogOut />
             </button>
@@ -112,8 +112,8 @@ const Nav: React.FC = () => {
                 href={link.path}
                 className={
                   pathname === link.path
-                    ? "text-[#16423C] font-bold"
-                    : "text-black hover:text-[#16423C] transition-all duration-300"
+                    ? "text-main font-bold"
+                    : "text-black hover:text-main transition-all duration-300"
                 }
                 onClick={() => setOpen(false)} // Close menu on link click
               >
@@ -128,8 +128,8 @@ const Nav: React.FC = () => {
               href={"/login"}
               className={
                 pathname === "/login"
-                  ? "bg-secondary text-sm text-white px-8 py-2 rounded-md"
-                  : "bg-secondary text-sm text-white px-8 py-2 rounded transition-all duration-300"
+                  ? "bg-main text-sm text-white px-8 py-2 rounded-md"
+                  : "bg-main text-sm text-white px-8 py-2 rounded transition-all duration-300"
               }
             >
               Login
@@ -137,7 +137,7 @@ const Nav: React.FC = () => {
           ) : (
             <button
               onClick={handleSignOut}
-              className="px-12 py-2 rounded-md bg-secondary text-sm text-white transition-all duration-300"
+              className="px-12 py-2 rounded-md bg-main text-sm text-white transition-all duration-300"
             >
               <IoLogOut size={25} />
             </button>
