@@ -1,4 +1,3 @@
-// "use client"
 import React, { FormEvent, useState } from "react";
 import {
   Dialog,
@@ -54,7 +53,7 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
     const caption = (form.elements.namedItem("caption") as HTMLInputElement)
       .value;
     const storyImage = imageUrl || null;
-    if(!imageUrl && !caption) {
+    if (!imageUrl && !caption) {
       return toast.error("Please Write your Story");
     }
     const storyInfo = { caption, storyImage, ...user };
