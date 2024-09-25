@@ -14,8 +14,16 @@ export const POST = async (request: Request) => {
     const db = await connectDB();
     const storyCollection = db.collection("stories");
     console.log(storyInfo);
-    await storyCollection?.insertOne({...storyInfo, createdAt: Date.now()});
-    return NextResponse.json({ message: "Story Uploaded", uploaded: true }, { status: 200 });
+    await storyCollection?.insertOne({
+      ...storyInfo,
+      createdAt: new Date(),
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    });
+    await storyCollection.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+    return NextResponse.json(
+      { message: "Story Uploaded", uploaded: true },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error in POST request:", error);
     return NextResponse.json(

@@ -17,6 +17,8 @@ interface ShowStoryModal {
 interface CurrentUser {
   storyImage: string;
   caption: string;
+  image: string;
+  name: string;
 }
 
 const ShowStoryModal: React.FC<ShowStoryModal> = ({
@@ -71,6 +73,18 @@ const ShowStoryModal: React.FC<ShowStoryModal> = ({
                         <p className="text-left absolute bottom-0 bg-white w-full p-3 rounded-b-2xl font-semibold">
                           {currentStory?.caption}
                         </p>
+                        <div className="absolute top-4 left-4 flex items-center gap-2">
+                          <Image
+                            className="rounded-full border-2 border-blue-500 object-cover"
+                            alt="user-photo"
+                            src={currentStory?.image}
+                            height={30}
+                            width={30}
+                          />
+                          <p className="text-main text-[16px] text-shadow-lg font-semibold">
+                            {currentStory?.name}
+                          </p>
+                        </div>
                       </>
                     ) : (
                       <div className="relative flex items-center justify-center text-white bg-main h-[300px] p-3 rounded-2xl font-semibold text-center">

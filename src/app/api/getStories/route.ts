@@ -6,7 +6,10 @@ export const GET = async (request: Request) => {
   try {
     const db = await connectDB();
     const storyCollection = db.collection("stories");
-    const stories = await storyCollection.find().toArray();
+    const stories = await storyCollection
+      .find()
+      .sort({ createdAt: -1 })
+      .toArray();
     return NextResponse.json(stories);
   } catch (error) {
     console.log(error);

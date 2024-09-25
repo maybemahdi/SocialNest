@@ -13,6 +13,7 @@ import axios from "axios";
 import useAuth from "@/Hooks/useAuth";
 import Swal from "sweetalert2";
 import useStory from "@/Hooks/useStory";
+import { ImSpinner9 } from "react-icons/im";
 
 interface StoryModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
   const { refetch } = useStory();
   const { user } = useAuth();
   const [imgLoading, setImgLoading] = useState(false);
+  const [processing, setIsProcessing] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   // handle image
@@ -58,11 +60,13 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
     }
     const storyInfo = { caption, storyImage, ...user };
     try {
+      setIsProcessing(true)
       const { data } = await axios.post(
         "/private/home/api/createStory",
         storyInfo
       );
       if (data?.uploaded) {
+        setIsProcessing(false)
         Swal.fire({
           title: "Good job!",
           text: "Story Uploaded!",
@@ -112,7 +116,7 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
                     as="h3"
                     className="text-lg font-medium text-center leading-6 text-main"
                   >
-                    Create Your Story
+                    Your story will automatically removed after 24 hours
                   </DialogTitle>
                   <div className="mt-2 w-full">
                     {/* create story form/uploadImage/text */}
@@ -143,12 +147,12 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
                           Cancel
                         </button>
                         <button
-                          disabled={imgLoading}
+                          disabled={imgLoading || processing}
                           type="submit"
                           className="disabled:bg-slate-200 disabled:cursor-not-allowed inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                         //   onClick={() => setIsOpen(false)}
                         >
-                          Update
+                          {!processing ? "Post" : <ImSpinner9 size={20} className="animate-spin" />}
                         </button>
                       </div>
                     </form>
