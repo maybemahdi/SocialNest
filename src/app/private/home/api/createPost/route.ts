@@ -1,7 +1,7 @@
 import { connectDB } from "@/lib/connectDB";
 import { NextResponse } from "next/server";
 
-interface StoryInfo {
+interface PostInfo {
   email: string;
   currentStories: unknown;
   caption: string;
@@ -10,17 +10,15 @@ interface StoryInfo {
 
 export const POST = async (request: Request) => {
   try {
-    const storyInfo: StoryInfo = await request.json();
+    const postInfo: PostInfo = await request.json();
     const db = await connectDB();
-    const storyCollection = db.collection("stories");
-    await storyCollection?.insertOne({
-      ...storyInfo,
+    const postCollection = db.collection("posts");
+    await postCollection?.insertOne({
+      ...postInfo,
       createdAt: new Date(),
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
-    await storyCollection.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
     return NextResponse.json(
-      { message: "Story Uploaded", uploaded: true },
+      { message: "Post Uploaded", uploaded: true },
       { status: 200 }
     );
   } catch (error) {

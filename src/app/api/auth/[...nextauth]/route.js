@@ -73,11 +73,11 @@ const handler = NextAuth({
             provider: "google",
           });
           if (!isUserExist) {
-            const userName = generateRandomUsername(user?.name);
+            const username = generateRandomUsername(user?.name);
             await userCollection.insertOne({
               ...user,
               provider: "google",
-              userName,
+              username,
               role: "user",
             });
             return user;

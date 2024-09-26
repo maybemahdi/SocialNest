@@ -34,7 +34,7 @@ export default function PrivateLayout({
 
   if (status === "loading" || loading) return <Loading />;
   return (
-    <html lang="en" className="bg-[#F0F2F5]">
+    <html lang="en">
       <body className={poppins.className}>
         <Toaster />
         <AuthProvider>

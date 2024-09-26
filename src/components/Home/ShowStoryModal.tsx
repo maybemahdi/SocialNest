@@ -1,5 +1,6 @@
 // ShowStoryModal.tsx
 import React, { Fragment } from "react";
+import { formatDistanceToNow } from 'date-fns';
 import { MdCancel } from "react-icons/md";
 import {
   Dialog,
@@ -9,7 +10,7 @@ import {
 } from "@headlessui/react";
 import Image from "next/image";
 
-interface ShowStoryModal {
+interface ShowStoryModalProps {
   isStoryOpen: boolean;
   setIsStoryOpen: (isOpen: boolean) => void;
   currentStory: CurrentStory;
@@ -20,13 +21,21 @@ interface CurrentStory {
   caption: string;
   image: string;
   name: string;
+  createdAt: string;
 }
 
-const ShowStoryModal: React.FC<ShowStoryModal> = ({
+const ShowStoryModal: React.FC<ShowStoryModalProps> = ({
   isStoryOpen,
   setIsStoryOpen,
   currentStory,
 }) => {
+  const timeAgo = (timestamp: string) => {
+    const date = new Date(timestamp);
+    if (isNaN(date.getTime())) {
+      return "Invalid date";
+    }
+    return formatDistanceToNow(date, { addSuffix: true });
+  };
   return (
     <>
       <Transition appear show={isStoryOpen} as={Fragment}>
@@ -74,6 +83,25 @@ const ShowStoryModal: React.FC<ShowStoryModal> = ({
                         <p className="text-left absolute bottom-0 bg-white w-full p-3 rounded-b-2xl font-semibold">
                           {currentStory?.caption}
                         </p>
+                        <div className="absolute top-4 left-4 flex items-center justify-center gap-2">
+                          <Image
+                            className="rounded-full border-2 border-blue-500 object-cover"
+                            alt="user-photo"
+                            src={currentStory?.image}
+                            height={30}
+                            width={30}
+                          />
+                          <p className="text-white text-[16px] text-shadow-lg font-semibold">
+                            {currentStory?.name}
+                          </p>
+                          <p className="text-white mt-[7px] text-[8px] text-shadow-lg font-normal">
+                            {currentStory?.createdAt && timeAgo(currentStory.createdAt)}
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="relative flex items-center justify-center text-white bg-main h-[300px] p-3 rounded-2xl font-semibold text-center">
+                        <p className="text-xl">{currentStory?.caption}</p>
                         <div className="absolute top-4 left-4 flex items-center gap-2">
                           <Image
                             className="rounded-full border-2 border-blue-500 object-cover"
@@ -82,14 +110,13 @@ const ShowStoryModal: React.FC<ShowStoryModal> = ({
                             height={30}
                             width={30}
                           />
-                          <p className="text-main text-[16px] text-shadow-lg font-semibold">
+                          <p className="text-white text-[16px] text-shadow-lg font-semibold">
                             {currentStory?.name}
                           </p>
+                          <p className="text-white mt-[7px] text-[8px] text-shadow-lg font-normal">
+                            {currentStory?.createdAt && timeAgo(currentStory.createdAt)}
+                          </p>
                         </div>
-                      </>
-                    ) : (
-                      <div className="relative flex items-center justify-center text-white bg-main h-[300px] p-3 rounded-2xl font-semibold text-center">
-                        <p className="text-xl">{currentStory?.caption}</p>
                       </div>
                     )}
                   </div>

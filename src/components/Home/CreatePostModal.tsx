@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, Fragment, useState } from "react";
 import {
   Dialog,
   DialogPanel,
@@ -6,16 +6,15 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment } from "react";
+import { ImSpinner9 } from "react-icons/im";
 import ImageUpload from "../ImageUpload";
-import toast from "react-hot-toast";
 import axios from "axios";
+import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import Swal from "sweetalert2";
-import useStory from "@/Hooks/useStory";
-import { ImSpinner9 } from "react-icons/im";
+import usePost from "@/Hooks/usePost";
 
-interface StoryModalProps {
+interface PostModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }
@@ -23,12 +22,12 @@ interface StoryModalProps {
 const imgbb_api_key = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
 const img_hosting_api = `https://api.imgbb.com/1/upload?key=${imgbb_api_key}`;
 
-const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
-  const { refetch } = useStory();
-  const { user } = useAuth();
+const CreatePostModal: React.FC<PostModalProps> = ({ isOpen, setIsOpen }) => {
   const [imgLoading, setImgLoading] = useState(false);
   const [processing, setIsProcessing] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const { user } = useAuth();
+  const { refetch } = usePost();
 
   // handle image
   const handleImage = async (file: File | null) => {
@@ -49,44 +48,45 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
   };
 
   //create story
-  const handleCreateStory = async (e: FormEvent<HTMLFormElement>) => {
+  const handleCreatePost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const caption = (form.elements.namedItem("caption") as HTMLInputElement)
       .value;
-    const storyImage = imageUrl || null;
+    const postImage = imageUrl || null;
     if (!imageUrl && !caption) {
-      return toast.error("Please Write your Story");
+      return toast.error("Please Write your Post");
     }
-    const storyInfo = { caption, storyImage, ...user };
+    const postInfo = { caption, postImage, ...user };
     try {
       setIsProcessing(true);
       const { data } = await axios.post(
-        "/private/home/api/createStory",
-        storyInfo
+        "/private/home/api/createPost",
+        postInfo
       );
       if (data?.uploaded) {
         setIsProcessing(false);
         Swal.fire({
           title: "Good job!",
-          text: "Story Uploaded!",
+          text: "Post Uploaded!",
           icon: "success",
         });
         refetch();
         setIsOpen(false);
       }
-    } catch (error ) {
-      setIsProcessing(false)
+    } catch (error) {
+      setIsProcessing(false);
       form.reset();
       if (error instanceof Error) {
-          console.error("Post Error:", error);
-          toast.error(error.message || "An error occurred");
+        console.error("Post Error:", error);
+        toast.error(error.message || "An error occurred");
       } else {
-          console.error("Post Error:", error);
-          toast.error("An unexpected error occurred");
+        console.error("Post Error:", error);
+        toast.error("An unexpected error occurred");
       }
     }
   };
+
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -126,7 +126,7 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
                     as="h3"
                     className="text-lg font-medium text-center leading-6 text-main"
                   >
-                    Your story will automatically removed after 24 hours
+                    You can only post Photos
                   </DialogTitle>
                   <div className="mt-2 w-full">
                     {/* create story form/uploadImage/text */}
@@ -135,14 +135,14 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
                       setImageUrl={setImageUrl}
                     />
                     <form
-                      onSubmit={handleCreateStory}
+                      onSubmit={handleCreatePost}
                       className="max-w-md mx-auto mt-2"
                     >
-                      <input
-                        type="text"
+                      <textarea
                         name="caption"
-                        placeholder={"Story Caption"}
-                        className="w-full py-2 bg-transparent border-b border-gray-300 focus:border-primary focus:outline-none placeholder-gray-400 transition-colors"
+                        placeholder={"Post Caption"}
+                        rows={1}
+                        className="w-full resize-none py-2 bg-transparent border-b border-gray-300 focus:border-primary focus:outline-none placeholder-gray-400 transition-colors"
                       />
                       <hr className="my-5 " />
                       <div className="flex justify-center gap-4 items-center">
@@ -181,4 +181,4 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
   );
 };
 
-export default CreateStoryModal;
+export default CreatePostModal;

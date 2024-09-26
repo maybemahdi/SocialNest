@@ -1,6 +1,5 @@
 "use client"
 import Loading from '@/components/Loading';
-import { generateRandomUsername } from '@/lib/generateUsername';
 import axios from 'axios';
 import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -46,12 +45,13 @@ const Page: React.FC = () => {
         }
         const form = e.target as HTMLFormElement;
         const name = (form.elements.namedItem('name') as HTMLInputElement).value;
-        const userName = generateRandomUsername(name);
-        const email = (form.elements.namedItem('email') as HTMLInputElement).value;
-        const password = (form.elements.namedItem('password') as HTMLInputElement).value;
-        const newUser = { name, userName, email, password, image: imageUrl, role: "user" };
-
+        
         try {
+            const { data: usernameData } = await axios.post('/api/generateUserName', { name });
+            const username = usernameData.username;
+            const email = (form.elements.namedItem('email') as HTMLInputElement).value;
+            const password = (form.elements.namedItem('password') as HTMLInputElement).value;
+            const newUser = { name, username, email, password, image: imageUrl, role: "user" };
             setIsLoading(true)
             const { data } = await axios.post(`/public/register/api`, newUser);
             console.log(data);
@@ -100,7 +100,7 @@ const Page: React.FC = () => {
         try {
             setImgLoading(true);
             const { data } = await axios.post(img_hosting_api, formData);
-            console.log(data)
+            // console.log(data)
             setImgLoading(false);
             setImageUrl(data.data.display_url);
         } catch (error) {

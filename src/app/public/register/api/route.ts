@@ -13,7 +13,7 @@ export const POST = async (request: Request) => {
     const db = await connectDB();
     const userCollection = db.collection("users");
 
-    console.log(newUser);
+    // console.log(newUser);
 
     const isExist = await userCollection.findOne({
       email: newUser.email,
