@@ -77,7 +77,7 @@ const Center = () => {
             <div className="my-3 md:w-[70%] w-full mx-auto">
                 <StorySlider user={user} />
             </div>
-            <div className="my-3 flex flex-col md:w-[70%] w-full mx-auto">
+            <div className="my-3 flex flex-col items-center gap-5 md:w-[70%] w-full mx-auto">
                 {!isLoading ? (
                     posts?.map((post: Post) => <PostCard key={post?._id} post={post} />)
                 ) : (

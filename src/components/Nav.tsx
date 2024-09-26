@@ -45,7 +45,7 @@ const Nav: React.FC = () => {
   };
 
   return (
-    <nav className="w-full md:py-3 py-2 bg-white shadow-md sticky top-0">
+    <nav className="w-full md:py-3 py-2 bg-white shadow-md sticky top-0 z-[1000]">
       <div className="flex justify-between items-center mx-auto w-[95%] py-4">
         <div>
           <Link href="/private/home" className="font-bold text-xl text-main">
