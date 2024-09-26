@@ -1,3 +1,4 @@
+// ShowStoryModal.tsx
 import React, { Fragment } from "react";
 import { MdCancel } from "react-icons/md";
 import {
@@ -11,10 +12,10 @@ import Image from "next/image";
 interface ShowStoryModal {
   isStoryOpen: boolean;
   setIsStoryOpen: (isOpen: boolean) => void;
-  currentStory: CurrentUser;
+  currentStory: CurrentStory;
 }
 
-interface CurrentUser {
+interface CurrentStory {
   storyImage: string;
   caption: string;
   image: string;

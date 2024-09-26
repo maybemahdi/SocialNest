@@ -1,3 +1,4 @@
+// StorySlider.tsx
 import React, { useState } from "react";
 import {
   Carousel,
@@ -21,12 +22,31 @@ interface User {
   image: string;
   email: string,
 }
+interface CurrentStory {
+  storyImage: string;
+  caption: string;
+  image: string;
+  name: string;
+}
+interface Story {
+  email: string;
+  storyImage: string;
+  caption: string;
+  name: string;
+  image: string;
+}
+
 
 const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
   const { stories, isLoading } = useStory();
   const [isOpen, setIsOpen] = useState(false);
   const [isStoryOpen, setIsStoryOpen] = useState(false);
-  const [currentStory, setCurrentStory] = useState(null)
+  const [currentStory, setCurrentStory] = useState<CurrentStory>({
+    storyImage: "",
+    caption: "",
+    image: "",
+    name: "",
+  })
 
   return (
     <div className="relative">
@@ -47,7 +67,7 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
               >
                 <CardContent className="min-h-[125px] flex flex-col aspect-square items-center justify-center p-0 relative">
                   <Image
-                    className="w-full h-full rounded-lg"
+                    className="w-full h-full rounded-lg object-cover"
                     src={user?.image}
                     alt="addStory"
                     height={300}
@@ -67,7 +87,7 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
             <CreateStoryModal isOpen={isOpen} setIsOpen={setIsOpen} />
           </CarouselItem>
           {!isLoading && (
-            stories?.filter(story => story?.email === user?.email).map((story, index) => (
+            stories?.filter((story:Story) => story?.email === user?.email).map((story:Story, index:number) => (
               <CarouselItem key={index} className="basis-1/3">
                 <div className="p-1">
                   <Card onClick={() => {
