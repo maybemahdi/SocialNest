@@ -91,7 +91,7 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
             stories
               ?.filter((story: Story) => story?.userName === user?.userName)
               .map((story: Story, index: number) => (
-                <CarouselItem key={index} className="basis-1/3 md:basis-1/4">
+                <CarouselItem key={index} className="basis-1/3 md:basis-1/4 border-0">
                   <div className="p-1">
                     <Card
                       onClick={() => {

@@ -3,7 +3,7 @@
 import useAuth from "@/Hooks/useAuth";
 import useGoProfile from "@/Hooks/useGoProfile";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { IoMdPhotos } from "react-icons/io";
 import { RiLiveFill } from "react-icons/ri";
 import StorySlider from "./StorySlider";
@@ -44,17 +44,18 @@ const Center = () => {
         <div className="flex items-center justify-center gap-5">
           <Image
             onClick={goProfile}
-            className="rounded-full cursor-pointer w-fit"
+            className="rounded-full cursor-pointer h-11 w-11 object-cover"
             src={user?.image}
-            height={30}
-            width={40}
+            objectFit="cover"
+            width={44}
+            height={44}
             alt="PFP"
           />
           <p
             onClick={() => {
               setIsOpen(true);
             }}
-            className="bg-slate-100 hover:bg-slate-200 transition-all duration-300 rounded-3xl px-4 py-2 flex-1 text-gray-400 cursor-pointer"
+            className="flex-1 bg-slate-100 hover:bg-slate-200 transition-all duration-300 rounded-3xl px-4 py-2 text-gray-400 cursor-pointer"
           >
             What's on your mind, {user?.name}?
           </p>

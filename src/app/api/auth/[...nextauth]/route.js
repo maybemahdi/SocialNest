@@ -49,7 +49,7 @@ const handler = NextAuth({
         token.id = user._id; // Add user ID to token
         token.role = user.role || "user"; // Add role to token (default to 'user')
         token.provider = account.provider; // Add provider info
-        token.userName = user.userName; // Add username
+        token.username = user.username; // Add username
       }
       return token;
     },
@@ -57,7 +57,7 @@ const handler = NextAuth({
       // Add extra properties to session object from token
       session.user.id = token.id;
       session.user.role = token.role; // Add role to session
-      session.user.userName = token.userName; // Add username to session
+      session.user.username = token.username; // Add username to session
       session.user.provider = token.provider; // Add provider to session
 
       return session;

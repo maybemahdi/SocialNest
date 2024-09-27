@@ -6,6 +6,7 @@ import { Link, MessageCircle } from "lucide-react";
 import { RiHeartFill, RiHeartLine } from "react-icons/ri";
 import axios from "axios";
 import ShowLikersModal from "./ShowLikersModal";
+import { useRouter } from "next/navigation";
 
 interface PostProps {
   post: Post;
@@ -40,6 +41,7 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
   const [likes, setLikes] = useState<string[]>(post.likes);
   const isLiked = likes?.includes(user?.username);
   const [isOpen, setIsOpen] = useState(false)
+  const router = useRouter()
   const timeAgo = formatDistanceToNow(new Date(post?.createdAt), {
     addSuffix: true,
   });
@@ -63,19 +65,25 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
       console.error("Error toggling like:", error);
     }
   };
+
+  const goUserprofile = () => {
+    router.push(`/private/${post?.username}`)
+  }
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden w-full mx-auto">
       <div className="p-4">
         <div className="flex items-center mb-4">
           <Image
+            onClick={goUserprofile}
             src={post?.image}
             alt={`${post?.username}'s avatar`}
-            width={40}
-            height={40}
-            className="rounded-full"
+            className="rounded-full cursor-pointer h-11 w-11 object-cover"
+            objectFit="cover"
+            width={44}
+            height={44}
           />
           <div className="ml-3">
-            <h2 className="font-semibold text-gray-800">{post?.username}</h2>
+            <h2 onClick={goUserprofile} className="font-semibold text-gray-800 cursor-pointer w-fit">{post?.username}</h2>
             <p className="text-xs text-gray-500">{timeAgo}</p>
           </div>
         </div>

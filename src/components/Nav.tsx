@@ -10,22 +10,26 @@ import Swal from "sweetalert2";
 import { AiFillHome } from "react-icons/ai";
 import { FaUserFriends } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
-import { IoLogOut, IoNotificationsSharp } from "react-icons/io5";
+import { IoLogOut, IoNotificationsSharp, IoSettingsSharp } from "react-icons/io5";
 import toast from "react-hot-toast";
 import usePost from "@/Hooks/usePost";
 import useStory from "@/Hooks/useStory";
+import useAuth from "@/Hooks/useAuth";
 
 const Nav: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const { data: session } = useSession();
+  const { user } = useAuth();
   const pathname = usePathname();
   const { refetch: postRefetch } = usePost();
   const { refetch: storyRefetch } = useStory();
 
+
   const navLinks = [
     { name: "Home", path: "/private/home" },
     { name: "Friends", path: "/private/friends" },
-    { name: "Profile", path: "/private/profile" },
+    { name: "Profile", path: `/private/${user?.username}` },
+    { name: "Setting", path: "/private/Setting" },
     { name: "Notifications", path: "/private/notifications" },
   ];
 
@@ -82,6 +86,7 @@ const Nav: React.FC = () => {
                   )}
                   {link.name === "Friends" && <FaUserFriends size={30} />}
                   {link.name === "Profile" && <CgProfile size={30} />}
+                  {link.name === "Setting" && <IoSettingsSharp size={30} />}
                   {link.name === "Notifications" && (
                     <IoNotificationsSharp size={30} />
                   )}
@@ -119,9 +124,8 @@ const Nav: React.FC = () => {
         </div>
       </div>
       <div
-        className={`lg:hidden transition-all duration-300 ${
-          open ? "max-h-96" : "max-h-0"
-        } overflow-hidden`}
+        className={`lg:hidden transition-all duration-300 ${open ? "max-h-96" : "max-h-0"
+          } overflow-hidden`}
       >
         <ul className="flex flex-col gap-4 items-start pl-[22px] py-2 bg-white border-t border-gray-200">
           {navLinks.map((link) => (

@@ -57,11 +57,11 @@ const ShowLikersModal: React.FC<ShowLikersModalProps> = ({
               >
                 <DialogPanel className="w-full max-w-md transform overflow-visible rounded-2xl bg-white align-middle shadow-xl transition-all relative">
                   <div className="w-full">
-                    <div className="relative flex flex-col justify-start items-start h-[300px] p-5 overflow-y-auto">
+                    <div className="relative w-full flex flex-col justify-start items-start h-[300px] p-5 overflow-y-auto">
                       <h3 className="underline mb-5">Likers</h3>
                       {likes?.map((like, idx: number) => (
                         <div key={idx} className="flex items-center gap-4">
-                          <Link href={`/private/user/${username}`} className="text-main hover:underline transition duration-300">
+                          <Link href={`/private/${username}`} className="text-main hover:underline transition duration-300">
                             {like}
                           </Link>
                             <RiHeartFill size={23} className="text-rose-500" />
