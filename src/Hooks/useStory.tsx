@@ -9,7 +9,7 @@ const useStory = () => {
         queryFn: async() => {
             const {data} = await axios.get("/api/getStories");
             return data;
-        }
+        },
     })
     return {stories, isLoading, refetch}
 };

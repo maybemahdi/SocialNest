@@ -12,20 +12,22 @@ import { FaUserFriends } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { IoLogOut, IoNotificationsSharp } from "react-icons/io5";
 import toast from "react-hot-toast";
+import usePost from "@/Hooks/usePost";
+import useStory from "@/Hooks/useStory";
 
 const Nav: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const { data: session } = useSession();
   const pathname = usePathname();
-
-  // console.log(session)
+  const { refetch: postRefetch } = usePost();
+  const { refetch: storyRefetch } = useStory();
 
   const navLinks = [
     { name: "Home", path: "/private/home" },
     { name: "Friends", path: "/private/friends" },
     { name: "Profile", path: "/private/profile" },
     { name: "Notifications", path: "/private/notifications" },
-  ]
+  ];
 
   const handleSignOut = () => {
     Swal.fire({
@@ -38,17 +40,30 @@ const Nav: React.FC = () => {
       confirmButtonText: "Yes, Sign Out!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        toast.success("Log Out Successful")
+        toast.success("Log Out Successful");
         await signOut({ callbackUrl: "/public/login" });
       }
     });
   };
 
+  const handleRefetch = async () => {
+    try {
+      await postRefetch();
+      await storyRefetch();
+    } catch (error) {
+      console.error("Refetch error:", error);
+    }
+  };
+
   return (
-    <nav className="w-full md:py-3 py-2 bg-white shadow-md sticky top-0 z-[1000]">
+    <nav className="w-full md:py-3 py-2 bg-white shadow-md sticky top-0 z-[100]">
       <div className="flex justify-between items-center mx-auto w-[95%] py-4">
         <div>
-          <Link href="/private/home" className="font-bold text-xl text-main">
+          <Link
+            onClick={handleRefetch}
+            href="/private/home"
+            className="font-bold text-xl text-main"
+          >
             SocialNest
           </Link>
         </div>
@@ -59,15 +74,17 @@ const Nav: React.FC = () => {
                 <Link
                   href={link.path}
                   className={
-                    pathname === link.path
-                      ? "text-main"
-                      : "text-slate-500"
+                    pathname === link.path ? "text-main" : "text-slate-500"
                   }
                 >
-                  {link.name === "Home" && <AiFillHome size={30} />}
+                  {link.name === "Home" && (
+                    <AiFillHome onClick={handleRefetch} size={30} />
+                  )}
                   {link.name === "Friends" && <FaUserFriends size={30} />}
                   {link.name === "Profile" && <CgProfile size={30} />}
-                  {link.name === "Notifications" && <IoNotificationsSharp size={30} />}
+                  {link.name === "Notifications" && (
+                    <IoNotificationsSharp size={30} />
+                  )}
                 </Link>
               </li>
             ))}
@@ -102,8 +119,9 @@ const Nav: React.FC = () => {
         </div>
       </div>
       <div
-        className={`lg:hidden transition-all duration-300 ${open ? "max-h-96" : "max-h-0"
-          } overflow-hidden`}
+        className={`lg:hidden transition-all duration-300 ${
+          open ? "max-h-96" : "max-h-0"
+        } overflow-hidden`}
       >
         <ul className="flex flex-col gap-4 items-start pl-[22px] py-2 bg-white border-t border-gray-200">
           {navLinks.map((link) => (

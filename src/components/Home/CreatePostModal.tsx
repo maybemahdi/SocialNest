@@ -57,7 +57,7 @@ const CreatePostModal: React.FC<PostModalProps> = ({ isOpen, setIsOpen }) => {
     if (!imageUrl && !caption) {
       return toast.error("Please Write your Post");
     }
-    const postInfo = { caption, postImage, ...user };
+    const postInfo = { caption, postImage, likes: [], comments: [], ...user };
     try {
       setIsProcessing(true);
       const { data } = await axios.post(

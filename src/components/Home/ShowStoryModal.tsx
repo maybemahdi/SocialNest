@@ -41,7 +41,7 @@ const ShowStoryModal: React.FC<ShowStoryModalProps> = ({
       <Transition appear show={isStoryOpen} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-10 w-full"
+          className="relative w-full z-[1000]"
           onClose={() => {
             setIsStoryOpen(false);
           }}
