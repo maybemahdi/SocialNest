@@ -52,9 +52,8 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
 }) => {
   const [processing, setProcessing] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [commentForEdit, setCommentForEdit] = useState<string>("");
+  const [commentForEdit, setCommentForEdit] = useState<Comment | null>(null);
   const { user } = useAuth();
-  console.log(user);
   const goProfile = useGoProfile();
 
   // post a comment
@@ -75,7 +74,6 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
         commentInfo,
         postId,
       });
-      console.log(data);
       if (data?.message === "Comment added successfully") {
         form.reset();
         setProcessing(false);
@@ -104,7 +102,6 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
       const { data } = await axios.delete(`/private/home/api/deleteComment`, {
         data: { postId, commentId: id },
       });
-      console.log(data);
       if (data?.message === "Comment deleted successfully") {
         toast?.success("Comment Deleted");
         setComments(data?.comments);
@@ -115,9 +112,28 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
     }
   };
   // edit a comment
-  // const handleCommentEdit = async (id: string, postId: string) => {
-
-  // }
+  const handleEditComment = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const comment = (form.elements.namedItem("comment") as HTMLInputElement)
+      .value;
+    try {
+      setProcessing(true);
+      const { data } = await axios.patch("/private/home/api/editComment", { postId, commentId: commentForEdit?._id, comment });
+      if (data?.message === "Comment updated successfully") {
+        form.reset()
+        toast.success("Your Comment has been updated")
+        setProcessing(false)
+        setIsEditing(false)
+        setComments(data?.comments);
+        setCommentForEdit(null)
+      }
+    } catch (error) {
+      setProcessing(false);
+      console.error("Error updating comment:", error);
+      toast.error("An error occurred while updating the comment.");
+    }
+  }
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -158,97 +174,106 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
                     <div className="relative w-full flex flex-col justify-start items-start h-[500px] p-5 overflow-y-auto">
                       <h3 className="underline mb-5">Comments</h3>
                       <div className="flex flex-col items-start justify-start gap-4 w-full py-4 bg-white rounded-md">
-                        {comments?.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())?.map((comment, idx) => (
-                          <div
-                            className="flex shadow-md items-center gap-3 w-full bg-gray-50 p-3 rounded-lg"
-                            key={idx}
-                          >
-                            {/* User Image */}
-                            <Image
-                              onClick={() => {
-                                goProfile(comment?.username);
-                              }}
-                              className="cursor-pointer object-cover rounded-full h-[44px] w-[44px]"
-                              objectFit="cover"
-                              alt="User Profile"
-                              height={44}
-                              width={44}
-                              src={comment?.userImage}
-                            />
-                            {/* Comment Content */}
-                            <div className="flex flex-col gap-1 text-main w-full">
-                              {/* Username */}
-                              <div className="flex justify-between items-center">
-                                <p
-                                  onClick={() => {
-                                    goProfile(comment?.username);
-                                  }}
-                                  className="cursor-pointer font-semibold text-sm text-gray-800"
-                                >
-                                  {comment?.username}
-                                </p>
-                                {/* Timestamp */}
-                                <span className="text-xs text-gray-500">
-                                  {formatDistanceToNow(
-                                    new Date(comment?.createdAt),
-                                    {
-                                      addSuffix: true,
-                                    }
-                                  )}
-                                </span>
-                              </div>
-                              {/* Comment Text */}
-                              <div className="flex justify-between items-center">
-                                <p className="text-sm text-gray-700 text-left">
-                                  {comment?.comment}
-                                </p>
-                                {/* edit/delete */}
-                                <div className="flex gap-3">
-                                  {comment?.username === user?.username && (
-                                    <>
-                                      <button
-                                        disabled={isEditing || processing}
-                                        className="disabled:cursor-not-allowed"
-                                      >
-                                        <FaRegEdit
-                                          onClick={() => {
-                                            setIsEditing(true);
-                                            setCommentForEdit(comment?.comment);
-                                          }}
-                                          title="Edit your comment"
-                                          className="cursor-pointer transition duration-300 hover:text-blue-500"
-                                        />
-                                      </button>
-                                      <button
-                                        disabled={isEditing || processing}
-                                        className="disabled:cursor-not-allowed"
-                                      >
-                                        <RiDeleteBinLine
-                                          title="Delete your comment"
-                                          onClick={() =>
-                                            handleDeleteComment(
-                                              comment?._id,
-                                              postId
-                                            )
-                                          }
-                                          className="cursor-pointer transition duration-300  hover:text-rose-500"
-                                        />
-                                      </button>
-                                    </>
-                                  )}
-                                  <button
-                                    disabled={isEditing || processing}
-                                    className="disabled:cursor-not-allowed">
-                                    <FaReply
-                                      title="Reply to this Comment"
-                                      className="cursor-pointer transition duration-300  hover:text-blue-500"
-                                    />
-                                  </button>
+                        {comments
+                          ?.sort(
+                            (a, b) =>
+                              new Date(b.createdAt).getTime() -
+                              new Date(a.createdAt).getTime()
+                          )
+                          ?.map((comment, idx) => (
+                            <div
+                              className="flex shadow-md items-center gap-3 w-full bg-gray-50 p-3 rounded-lg"
+                              key={idx}
+                            >
+                              {/* User Image */}
+                              <Image
+                                onClick={() => {
+                                  goProfile(comment?.username);
+                                }}
+                                className="cursor-pointer object-cover rounded-full h-[44px] w-[44px]"
+                                objectFit="cover"
+                                alt="User Profile"
+                                height={44}
+                                width={44}
+                                src={comment?.userImage}
+                              />
+                              {/* Comment Content */}
+                              <div className="flex flex-col gap-1 text-main w-full">
+                                {/* Username */}
+                                <div className="flex justify-between items-center">
+                                  <p
+                                    onClick={() => {
+                                      goProfile(comment?.username);
+                                    }}
+                                    className="cursor-pointer font-semibold text-sm text-gray-800"
+                                  >
+                                    {comment?.username}
+                                  </p>
+                                  {/* Timestamp */}
+                                  <span className="text-xs text-gray-500">
+                                    {formatDistanceToNow(
+                                      new Date(comment?.createdAt),
+                                      {
+                                        addSuffix: true,
+                                      }
+                                    )}
+                                  </span>
+                                </div>
+                                {/* Comment Text */}
+                                <div className="flex justify-between items-center">
+                                  <p className="text-sm text-gray-700 text-left">
+                                    {comment?.comment}
+                                  </p>
+                                  {/* edit/delete */}
+                                  <div className="flex gap-3">
+                                    {comment?.username === user?.username && (
+                                      <>
+                                        <button
+                                          disabled={isEditing || processing}
+                                          className="disabled:cursor-not-allowed"
+                                        >
+                                          <FaRegEdit
+                                            onClick={() => {
+                                              setIsEditing(true);
+                                              setCommentForEdit(
+                                                comment
+                                              );
+                                            }}
+                                            title="Edit your comment"
+                                            className="cursor-pointer transition duration-300 hover:text-blue-500"
+                                          />
+                                        </button>
+                                        <button
+                                          disabled={isEditing || processing}
+                                          className="disabled:cursor-not-allowed"
+                                        >
+                                          <RiDeleteBinLine
+                                            title="Delete your comment"
+                                            onClick={() =>
+                                              handleDeleteComment(
+                                                comment?._id,
+                                                postId
+                                              )
+                                            }
+                                            className="cursor-pointer transition duration-300  hover:text-rose-500"
+                                          />
+                                        </button>
+                                      </>
+                                    )}
+                                    <button
+                                      disabled={isEditing || processing}
+                                      className="disabled:cursor-not-allowed"
+                                    >
+                                      <FaReply
+                                        title="Reply to this Comment"
+                                        className="cursor-pointer transition duration-300  hover:text-blue-500"
+                                      />
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
                       </div>
                       {!isEditing ? (
                         <form
@@ -276,12 +301,12 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
                         </form>
                       ) : (
                         <form
-                          // onSubmit={handleComment}
+                          onSubmit={handleEditComment}
                           className="w-[90%] absolute bottom-5 mx-auto mt-2 flex items-center bg-slate-200 rounded-full px-3"
                         >
                           <textarea
                             name="comment"
-                            defaultValue={commentForEdit}
+                            defaultValue={commentForEdit?.comment}
                             placeholder="Edit Your Comment"
                             rows={1}
                             required
@@ -317,8 +342,8 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
                     className="inline-flex absolute top-1 right-3 justify-center border border-transparent rounded-full p-2 text-sm font-medium text-rose-500 hover:text-slate-300 transition-all duration-300"
                     onClick={() => {
                       setIsOpen(false);
-                      setProcessing(false)
-                      setIsEditing(false)
+                      setProcessing(false);
+                      setIsEditing(false);
                     }}
                   >
                     <MdCancel size={30} />
