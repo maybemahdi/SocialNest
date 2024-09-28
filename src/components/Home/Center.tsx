@@ -24,10 +24,18 @@ interface Post {
   comments: Array<Comment>;
 }
 interface Comment {
-  _id: string;
   userId: string;
-  userName: string;
-  content: string;
+  userImage: string;
+  username: string;
+  comment: string;
+  replies: Array<Reply>
+  createdAt: string;
+}
+interface Reply {
+  userId: string;
+  userImage: string;
+  username: string;
+  comment: string;
   createdAt: string;
 }
 
@@ -43,7 +51,7 @@ const Center = () => {
       <div className="bg-white shadow-md rounded-md flex flex-col gap-3 p-3 md:px-8 m:py-3 md:w-[70%] w-full mx-auto">
         <div className="flex items-center justify-center gap-5">
           <Image
-            onClick={goProfile}
+            onClick={() => goProfile(user?.username)}
             className="rounded-full cursor-pointer h-11 w-11 object-cover"
             src={user?.image}
             objectFit="cover"

@@ -28,7 +28,7 @@ const Nav: React.FC = () => {
   const navLinks = [
     { name: "Home", path: "/private/home" },
     { name: "Friends", path: "/private/friends" },
-    { name: "Profile", path: `/private/${user?.username}` },
+    { name: "Profile", path: `/private/user/${user?.username}` },
     { name: "Setting", path: "/private/Setting" },
     { name: "Notifications", path: "/private/notifications" },
   ];

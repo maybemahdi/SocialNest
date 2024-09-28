@@ -1,11 +1,12 @@
 "use client"
 import { useRouter } from 'next/navigation';
 
+
 const useGoProfile = () => {
     const router = useRouter();
 
-    const goProfile = () => {
-        router.push("/private/profile");
+    const goProfile = (username : string) => {
+        router.push(`/private/user/${username}`);
     };
 
     return goProfile;
