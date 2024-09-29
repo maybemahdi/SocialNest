@@ -1,10 +1,13 @@
 "use client"
 import { useParams } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 
-const Page = () => {
+const SingleUserPage = () => {
     const params = useParams();
     const { username } = params;
+    useEffect(() => {
+        document.title = `SocialNest | ${username}`;
+    }, [username]);
     return (
         <div>
             <h1>User Profile for {username}</h1>
@@ -12,4 +15,4 @@ const Page = () => {
     );
 };
 
-export default Page;
+export default SingleUserPage;

@@ -172,7 +172,7 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
                 <DialogPanel className="w-full max-w-md transform overflow-visible rounded-2xl bg-white align-middle shadow-xl transition-all relative">
                   <div className="w-full">
                     <div className="relative w-full flex flex-col justify-start items-start h-[500px] p-5 overflow-y-auto">
-                      <h3 className="underline mb-5">Comments</h3>
+                      <h3 className="mb-5">Comments</h3>
                       <div className="flex flex-col items-start justify-start gap-4 w-full py-4 bg-white rounded-md">
                         {comments
                           ?.sort(

@@ -1,16 +1,16 @@
-/* eslint-disable react/no-unescaped-entities */
+// center.tsx
 "use client";
 import useAuth from "@/Hooks/useAuth";
 import useGoProfile from "@/Hooks/useGoProfile";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoMdPhotos } from "react-icons/io";
 import { RiLiveFill } from "react-icons/ri";
 import StorySlider from "./StorySlider";
 import CreatePostModal from "./CreatePostModal";
-import usePost from "@/Hooks/usePost";
 import PostCard from "./PostCard";
 import PostCardSkeleton from "./PostCardSkeleton";
+import usePost from "@/Hooks/usePost";
 
 interface Post {
   _id: string;
@@ -28,7 +28,7 @@ interface Comment {
   userImage: string;
   username: string;
   comment: string;
-  replies: Array<Reply>
+  replies: Array<Reply>;
   createdAt: string;
 }
 interface Reply {
@@ -41,9 +41,39 @@ interface Reply {
 
 const Center = () => {
   const { user } = useAuth();
-  const { posts, isLoading } = usePost();
   const goProfile = useGoProfile();
   const [isOpen, setIsOpen] = useState(false);
+
+  const { posts, isLoading, fetchNextPage, hasNextPage } = usePost();
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  // Effect to handle Intersection Observer
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 1.0,
+    };
+  
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasNextPage) {
+        console.log("Loading more posts...");
+        fetchNextPage();
+      }
+    }, options);
+  
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+  
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [hasNextPage, fetchNextPage]);
+  
+
 
   return (
     <div className="w-full rounded flex flex-col">
@@ -96,12 +126,13 @@ const Center = () => {
       </div>
       <div className="my-3 flex flex-col items-center gap-5 md:w-[70%] w-full mx-auto">
         {!isLoading ? (
-          posts?.map((post: Post) => (
+          posts?.pages.flatMap((page) => page.posts).map((post) => (
             <PostCard key={post?._id} post={post} user={user} />
           ))
         ) : (
           <PostCardSkeleton />
         )}
+        {hasNextPage && <div ref={loadMoreRef} style={{ height: '1px', background: 'red' }} />}
       </div>
     </div>
   );
