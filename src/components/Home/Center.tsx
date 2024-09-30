@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // center.tsx
 "use client";
 import useAuth from "@/Hooks/useAuth";

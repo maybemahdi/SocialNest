@@ -115,18 +115,35 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-            <div className="flex items-center justify-center w-8 h-8 rounded-full p-2 cursor-pointer bg-slate-100 hover:bg-slate-200 transition-all duration-300">
-            <BsThreeDots className="text-gray-600" />
-          </div>
+              <div className="flex items-center justify-center w-8 h-8 rounded-full p-2 cursor-pointer bg-slate-100 hover:bg-slate-200 transition-all duration-300">
+                <BsThreeDots className="text-gray-600" />
+              </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>{post?.username === user?.username ? "Manage" : "Actions"}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>Team</DropdownMenuItem>
-              <DropdownMenuItem>Subscription</DropdownMenuItem>
-            </DropdownMenuContent>
+            {post?.username === user?.username ? (
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Manage Post</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Edit Post</DropdownMenuItem>
+                <DropdownMenuItem>Delete Post</DropdownMenuItem>
+              </DropdownMenuContent>
+            ) : (
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Action</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(
+                    `${process.env.NEXT_PUBLIC_URL}/private/post/${post?._id}`
+                  );
+                  toast.success("Link copied to clipboard!");
+                } catch (error) {
+                  toast.error("Failed to copy the link.");
+                  console.error("Copy failed", error);
+                }
+              }}>Copy Link</DropdownMenuItem>
+                <DropdownMenuItem>Save Post</DropdownMenuItem>
+              </DropdownMenuContent>
+            )}
           </DropdownMenu>
         </div>
 
@@ -174,7 +191,7 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
             className="flex items-center space-x-2 hover:text-blue-500 transition"
           >
             <MessageCircle size={20} />
-            <span>{post?.comments?.length > 0 && post?.comments?.length}</span>
+            <span>{comments?.length > 0 && comments?.length}</span>
           </button>
           <button className="flex items-center space-x-2 hover:text-blue-500 transition">
             <Link

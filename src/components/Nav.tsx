@@ -29,7 +29,7 @@ const Nav: React.FC = () => {
     { name: "Home", path: "/private/home" },
     { name: "Friends", path: "/private/friends" },
     { name: "Profile", path: `/private/user/${user?.username}` },
-    { name: "Setting", path: "/private/Setting" },
+    { name: "Setting", path: "/private/setting" },
     { name: "Notifications", path: "/private/notifications" },
   ];
 
