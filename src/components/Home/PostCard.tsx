@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import usePost from "@/Hooks/usePost";
 
 interface PostProps {
   post: Post;
@@ -58,6 +59,7 @@ interface Reply {
 }
 
 const PostCard: React.FC<PostProps> = ({ post, user }) => {
+  const { refetch } = usePost();
   const [likes, setLikes] = useState<string[]>(post.likes);
   const [comments, setComments] = useState<Comment[]>(post.comments);
   const isLiked = likes?.includes(user?.username);
@@ -86,6 +88,17 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
       }
     } catch (error) {
       console.error("Error toggling like:", error);
+    }
+  };
+
+  // delete a post
+  const handleDeletePost = async (id: string) => {
+    const { data } = await axios.delete(`/private/home/api/deletePost/${id}`);
+    if (data?.message === "Post Deleted Successfully") {
+      toast.success("Post Deleted Successfully");
+      refetch();
+    } else {
+      toast.error(data?.message);
     }
   };
 
@@ -124,30 +137,39 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
                 <DropdownMenuLabel>Manage Post</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Edit Post</DropdownMenuItem>
-                <DropdownMenuItem>Delete Post</DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => handleDeletePost(post?._id)}
+                >
+                  Delete Post
+                </DropdownMenuItem>
               </DropdownMenuContent>
             ) : (
               <DropdownMenuContent>
                 <DropdownMenuLabel>Action</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText(
-                    `${process.env.NEXT_PUBLIC_URL}/private/post/${post?._id}`
-                  );
-                  toast.success("Link copied to clipboard!");
-                } catch (error) {
-                  toast.error("Failed to copy the link.");
-                  console.error("Copy failed", error);
-                }
-              }}>Copy Link</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(
+                        `${process.env.NEXT_PUBLIC_URL}/private/post/${post?._id}`
+                      );
+                      toast.success("Link copied to clipboard!");
+                    } catch (error) {
+                      toast.error("Failed to copy the link.");
+                      console.error("Copy failed", error);
+                    }
+                  }}
+                >
+                  Copy Link
+                </DropdownMenuItem>
                 <DropdownMenuItem>Save Post</DropdownMenuItem>
               </DropdownMenuContent>
             )}
           </DropdownMenu>
         </div>
 
-        <p className="text-gray-700 mb-4">{post?.caption}</p>
+        {post?.caption && <p className="text-gray-700 mb-4">{post?.caption}</p>}
         {post?.postImage && (
           <div className="mb-4">
             <Image

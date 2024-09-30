@@ -24,16 +24,18 @@ interface Post {
   likes: Array<string>;
   comments: Array<Comment>;
 }
+
 interface Comment {
-  userId: string;
+  _id: string;
   userImage: string;
   username: string;
   comment: string;
   replies: Array<Reply>;
   createdAt: string;
 }
+
 interface Reply {
-  userId: string;
+  _id: string;
   userImage: string;
   username: string;
   comment: string;
@@ -127,7 +129,7 @@ const Center = () => {
       </div>
       <div className="my-3 flex flex-col items-center gap-5 md:w-[70%] w-full mx-auto">
         {!isLoading ? (
-          posts?.pages.flatMap((page) => page.posts).map((post) => (
+          posts?.pages.flatMap((page) => page.posts).map((post:Post) => (
             <PostCard key={post?._id} post={post} user={user} />
           ))
         ) : (

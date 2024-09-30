@@ -120,21 +120,25 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
       .value;
     try {
       setProcessing(true);
-      const { data } = await axios.patch("/private/home/api/editComment", { postId, commentId: commentForEdit?._id, comment });
+      const { data } = await axios.patch("/private/home/api/editComment", {
+        postId,
+        commentId: commentForEdit?._id,
+        comment,
+      });
       if (data?.message === "Comment updated successfully") {
-        form.reset()
-        toast.success("Your Comment has been updated")
-        setProcessing(false)
-        setIsEditing(false)
+        form.reset();
+        toast.success("Your Comment has been updated");
+        setProcessing(false);
+        setIsEditing(false);
         setComments(data?.comments);
-        setCommentForEdit(null)
+        setCommentForEdit(null);
       }
     } catch (error) {
       setProcessing(false);
       console.error("Error updating comment:", error);
       toast.error("An error occurred while updating the comment.");
     }
-  }
+  };
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -172,8 +176,10 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
               >
                 <DialogPanel className="w-full max-w-md transform overflow-visible rounded-2xl bg-white align-middle shadow-xl transition-all relative">
                   <div className="w-full">
-                    <div className="relative w-full flex flex-col justify-start items-start h-[500px] p-5 overflow-y-auto">
-                      <h3 className="mb-5">Comments</h3>
+                    <div className={`relative w-full flex flex-col ${comments?.length > 0 ? "justify-start items-start" : "justify-center items-center"} h-[500px] p-5 overflow-y-auto transition-all duration-300`}>
+                      {comments?.length > 0 && (
+                        <h3 className="mb-5">Comments</h3>
+                      )}
                       <div className="flex flex-col items-start justify-start gap-4 w-full py-4 bg-white rounded-md">
                         {comments
                           ?.sort(
@@ -236,9 +242,7 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
                                           <FaRegEdit
                                             onClick={() => {
                                               setIsEditing(true);
-                                              setCommentForEdit(
-                                                comment
-                                              );
+                                              setCommentForEdit(comment);
                                             }}
                                             title="Edit your comment"
                                             className="cursor-pointer transition duration-300 hover:text-blue-500"
@@ -335,6 +339,11 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
                             />
                           </button>
                         </form>
+                      )}
+                      {comments?.length === 0 && (
+                        <p className="font-bold text-center text-xl">
+                          Write Your First Comment!
+                        </p>
                       )}
                     </div>
                   </div>
