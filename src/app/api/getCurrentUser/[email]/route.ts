@@ -11,7 +11,7 @@ export const GET = async (
   try {
     const user = await userCollection.findOne(
       { email },
-      { projection: { _id: 0, password: 0 } }
+      { projection: { id: 0, password: 0 } }
     );
     if (!user) {
       return NextResponse.json({ error: "No User Exist" }, { status: 401 });

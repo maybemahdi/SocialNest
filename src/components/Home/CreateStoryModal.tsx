@@ -58,7 +58,17 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
     if (!imageUrl && !caption) {
       return toast.error("Please Write your Story");
     }
-    const storyInfo = { caption, storyImage, ...user };
+    const storyInfo = {
+      caption,
+      storyImage,
+      userId: user?._id,
+      username: user?.username,
+      name: user?.name,
+      email: user?.email,
+      image: user?.image,
+      provider: user?.provider,
+      role: user?.role,
+    };
     try {
       setIsProcessing(true);
       const { data } = await axios.post(
@@ -75,15 +85,15 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
         refetch();
         setIsOpen(false);
       }
-    } catch (error ) {
-      setIsProcessing(false)
+    } catch (error) {
+      setIsProcessing(false);
       form.reset();
       if (error instanceof Error) {
-          console.error("Post Error:", error);
-          toast.error(error.message || "An error occurred");
+        console.error("Post Error:", error);
+        toast.error(error.message || "An error occurred");
       } else {
-          console.error("Post Error:", error);
-          toast.error("An unexpected error occurred");
+        console.error("Post Error:", error);
+        toast.error("An unexpected error occurred");
       }
     }
   };

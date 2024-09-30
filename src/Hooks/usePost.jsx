@@ -9,6 +9,7 @@ const usePost = () => {
     isLoading,
     fetchNextPage,
     hasNextPage,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ["posts"],
     queryFn: async ({ pageParam = 1 }) => {
@@ -20,7 +21,7 @@ const usePost = () => {
     },
   });
 
-  return { posts, isLoading, fetchNextPage, hasNextPage };
+  return { posts, isLoading, fetchNextPage, hasNextPage, refetch };
 };
 
 export default usePost;

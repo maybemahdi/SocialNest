@@ -19,23 +19,27 @@ interface StorySliderProps {
   user: User;
 }
 interface User {
+  _id: string;
   image: string;
   email: string;
-  userName: string;
+  username: string;
 }
 interface CurrentStory {
   storyImage: string;
   caption: string;
   image: string;
   name: string;
+  createdAt: string;
 }
 interface Story {
   email: string;
-  userName: string;
+  userId: string;
+  username: string;
   storyImage: string;
   caption: string;
   name: string;
   image: string;
+  createdAt: string;
 }
 
 const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
@@ -47,6 +51,7 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
     caption: "",
     image: "",
     name: "",
+    createdAt: "",
   });
 
   return (
@@ -89,9 +94,12 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
           </CarouselItem>
           {!isLoading &&
             stories
-              ?.filter((story: Story) => story?.userName === user?.userName)
+              ?.filter((story: Story) => story?.userId === user?._id)
               .map((story: Story, index: number) => (
-                <CarouselItem key={index} className="basis-1/3 md:basis-1/4 border-0">
+                <CarouselItem
+                  key={index}
+                  className="basis-1/3 md:basis-1/4 border-0"
+                >
                   <div className="p-1">
                     <Card
                       onClick={() => {
@@ -113,6 +121,29 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
                             <p className="absolute bottom-0 py-1 bg-white w-full text-center text-main">
                               {story?.caption}
                             </p>
+                            <div className="absolute top-2 left-2 flex items-center gap-1">
+                              <Image
+                                className="rounded-full border-2 border-blue-500 object-cover"
+                                alt="user-photo"
+                                src={story?.image}
+                                height={20}
+                                width={20}
+                              />
+                              <p className="text-white text-[10px] text-shadow-lg font-semibold">
+                                {story?.name}
+                              </p>
+                            </div>
+                          </>
+                        )}
+                        {story?.storyImage && !story?.caption && (
+                          <>
+                            <Image
+                              className="w-full h-full rounded-lg object-cover"
+                              src={story?.storyImage}
+                              alt="addStory"
+                              height={300}
+                              width={300}
+                            />
                             <div className="absolute top-2 left-2 flex items-center gap-1">
                               <Image
                                 className="rounded-full border-2 border-blue-500 object-cover"
@@ -161,7 +192,7 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
               ))}
           {!isLoading ? (
             stories
-              ?.filter((story: Story) => story?.userName !== user?.userName)
+              ?.filter((story: Story) => story?.username !== user?.username)
               .map((story: Story, index: number) => (
                 <CarouselItem key={index} className="basis-1/3 md:basis-1/4">
                   <div className="p-1">
@@ -173,7 +204,7 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
                       className="cursor-pointer relative"
                     >
                       <CardContent className="min-h-[125px] flex flex-col aspect-square items-center justify-center p-0 relative">
-                        {story?.storyImage && story?.caption && (
+                      {story?.storyImage && story?.caption && (
                           <>
                             <Image
                               className="w-full h-full rounded-lg object-cover"
@@ -199,6 +230,29 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
                             </div>
                           </>
                         )}
+                        {story?.storyImage && !story?.caption && (
+                          <>
+                            <Image
+                              className="w-full h-full rounded-lg object-cover"
+                              src={story?.storyImage}
+                              alt="addStory"
+                              height={300}
+                              width={300}
+                            />
+                            <div className="absolute top-2 left-2 flex items-center gap-1">
+                              <Image
+                                className="rounded-full border-2 border-blue-500 object-cover"
+                                alt="user-photo"
+                                src={story?.image}
+                                height={20}
+                                width={20}
+                              />
+                              <p className="text-white text-[10px] text-shadow-lg font-semibold">
+                                {story?.name}
+                              </p>
+                            </div>
+                          </>
+                        )}
                         {!story?.storyImage && story?.caption && (
                           <>
                             <div className="bg-main rounded-lg flex items-center justify-center h-full w-full">
@@ -206,7 +260,7 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
                                 {story?.caption}
                               </p>
                             </div>
-                            <div className="absolute top-2 left-2 flex items-center gap-1 z-20">
+                            <div className="absolute top-2 left-2 flex items-center gap-1">
                               <Image
                                 className="rounded-full border-2 border-blue-500 object-cover"
                                 alt="user-photo"

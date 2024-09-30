@@ -8,7 +8,6 @@ import React, { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { AiFillHome } from "react-icons/ai";
-import { FaUserFriends } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { IoLogOut, IoNotificationsSharp, IoSettingsSharp } from "react-icons/io5";
 import toast from "react-hot-toast";
@@ -27,7 +26,6 @@ const Nav: React.FC = () => {
 
   const navLinks = [
     { name: "Home", path: "/private/home" },
-    { name: "Friends", path: "/private/friends" },
     { name: "Profile", path: `/private/user/${user?.username}` },
     { name: "Setting", path: "/private/setting" },
     { name: "Notifications", path: "/private/notifications" },
@@ -84,7 +82,6 @@ const Nav: React.FC = () => {
                   {link.name === "Home" && (
                     <AiFillHome onClick={handleRefetch} size={30} />
                   )}
-                  {link.name === "Friends" && <FaUserFriends size={30} />}
                   {link.name === "Profile" && <CgProfile size={30} />}
                   {link.name === "Setting" && <IoSettingsSharp size={30} />}
                   {link.name === "Notifications" && (

@@ -64,9 +64,10 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
       .value;
     const commentInfo = {
       comment,
+      replies: [],
+      userId: user?._id,
       userImage: user?.image,
       username: user?.username,
-      replies: [],
     };
     try {
       setProcessing(true);
