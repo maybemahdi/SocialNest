@@ -24,7 +24,7 @@ const img_hosting_api = `https://api.imgbb.com/1/upload?key=${imgbb_api_key}`;
 
 const CreatePostModal: React.FC<PostModalProps> = ({ isOpen, setIsOpen }) => {
   const [imgLoading, setImgLoading] = useState(false);
-  const [processing, setIsProcessing] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const { user } = useAuth();
   const { refetch } = usePost();
@@ -67,13 +67,13 @@ const CreatePostModal: React.FC<PostModalProps> = ({ isOpen, setIsOpen }) => {
       role: user?.role,
     };
     try {
-      setIsProcessing(true);
+      setProcessing(true);
       const { data } = await axios.post(
         "/private/home/api/createPost",
         postInfo
       );
       if (data?.uploaded) {
-        setIsProcessing(false);
+        setProcessing(false);
         Swal.fire({
           title: "Good job!",
           text: "Post Uploaded!",
@@ -83,7 +83,7 @@ const CreatePostModal: React.FC<PostModalProps> = ({ isOpen, setIsOpen }) => {
         setIsOpen(false);
       }
     } catch (error) {
-      setIsProcessing(false);
+      setProcessing(false);
       form.reset();
       if (error instanceof Error) {
         console.error("Post Error:", error);
@@ -167,7 +167,7 @@ const CreatePostModal: React.FC<PostModalProps> = ({ isOpen, setIsOpen }) => {
                         <button
                           disabled={imgLoading || processing}
                           type="submit"
-                          className="disabled:bg-slate-200 disabled:cursor-not-allowed inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                          className="transition-all duration-300 disabled:bg-slate-200 disabled:cursor-not-allowed inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                         //   onClick={() => setIsOpen(false)}
                         >
                           {!processing ? (

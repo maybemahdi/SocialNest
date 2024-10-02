@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import usePost from "@/Hooks/usePost";
+import EditPostModal from "./EditPostModal";
 
 interface PostProps {
   post: Post;
@@ -64,6 +65,7 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
   const [comments, setComments] = useState<Comment[]>(post.comments);
   const isLiked = likes?.includes(user?.username);
   const [likesModalOpen, setLikesModalOpen] = useState(false);
+  const [editPostModalOpen, setEditPostModalOpen] = useState(false);
   const [commentsModalOpen, setCommentsModalOpen] = useState(false);
   const goProfile = useGoProfile();
   const timeAgo = formatDistanceToNow(new Date(post?.createdAt), {
@@ -136,7 +138,12 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>Manage Post</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Edit Post</DropdownMenuItem>
+                <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => {
+                  setEditPostModalOpen(true)
+                }}
+                >Edit Post</DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() => handleDeletePost(post?._id)}
@@ -149,6 +156,7 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
                 <DropdownMenuLabel>Action</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
+                className="cursor-pointer"
                   onClick={async () => {
                     try {
                       await navigator.clipboard.writeText(
@@ -163,7 +171,6 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
                 >
                   Copy Link
                 </DropdownMenuItem>
-                <DropdownMenuItem>Save Post</DropdownMenuItem>
               </DropdownMenuContent>
             )}
           </DropdownMenu>
@@ -245,6 +252,11 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
           postId={post?._id}
           isOpen={commentsModalOpen}
           setIsOpen={setCommentsModalOpen}
+        />
+        <EditPostModal
+          editPostModalOpen={editPostModalOpen}
+          setEditPostModalOpen={setEditPostModalOpen}
+          post={post}
         />
       </div>
     </div>
