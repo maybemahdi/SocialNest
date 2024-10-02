@@ -108,11 +108,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         />
       </div>
       {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
-      {image && (
-        <p className="mt-2 text-sm text-gray-500">
-          File name: {image.name} ({Math.round(image.size / 1024)} KB)
-        </p>
-      )}
     </div>
   );
 };

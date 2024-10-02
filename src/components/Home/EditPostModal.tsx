@@ -88,7 +88,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({
     const form = e.target as HTMLFormElement;
     const caption =
       (form.elements.namedItem("caption") as HTMLInputElement).value || null;
-    const postImage = !visibleImage ? imageUrl : post?.postImage;
+    const postImage = (visibleImage && post?.postImage) || imageUrl;
     if (!postImage && !caption) {
       return toast.error("Please Write your Post");
     }
@@ -159,10 +159,10 @@ const EditPostModal: React.FC<EditPostModalProps> = ({
                 leaveTo="opacity-0 scale-95"
               >
                 <DialogPanel className="w-full max-w-md transform overflow-visible rounded-2xl bg-white align-middle shadow-xl transition-all relative">
-                  <form onSubmit={handleUpdatePost} className="w-full">
+                  <div className="w-full">
                     <div className="relative w-full flex flex-col justify-start items-start h-[500px] p-5 overflow-y-auto">
                       <h3 className="mb-5">Edit Your Post</h3>
-                      <div className="flex items-center mb-4">
+                      <div className="flex items-center mb-4 overflow-auto">
                         <Image
                           src={post?.image}
                           alt={`${post?.username}'s avatar`}
@@ -177,21 +177,38 @@ const EditPostModal: React.FC<EditPostModalProps> = ({
                           </h2>
                         </div>
                       </div>
-                      {post?.caption && (
-                        <input
-                          name="caption"
-                          defaultValue={post?.caption}
-                          placeholder="Write Post Caption"
-                          className="w-full mb-2 resize-none py-2 bg-transparent border-b border-gray-300 focus:border-primary focus:outline-none placeholder-gray-400 transition-colors"
-                        />
-                      )}
-                      {!post?.caption && (
-                        <input
-                          name="caption"
-                          placeholder="Write Post Caption"
-                          className="w-full mb-2 resize-none py-2 bg-transparent border-b border-gray-300 focus:border-primary focus:outline-none placeholder-gray-400 transition-colors"
-                        />
-                      )}
+                      <form onSubmit={handleUpdatePost} className="w-full">
+                        {post?.caption && (
+                          <input
+                            name="caption"
+                            defaultValue={post?.caption}
+                            placeholder="Write Post Caption"
+                            className="w-full mb-2 resize-none py-2 bg-transparent border-b border-gray-300 focus:border-primary focus:outline-none placeholder-gray-400 transition-colors"
+                          />
+                        )}
+                        {!post?.caption && (
+                          <input
+                            name="caption"
+                            placeholder="Write Post Caption"
+                            className="w-full mb-2 resize-none py-2 bg-transparent border-b border-gray-300 focus:border-primary focus:outline-none placeholder-gray-400 transition-colors"
+                          />
+                        )}
+                        <div className="fixed bottom-0 w-[90%] mx-auto p-2 z-20">
+                          <button
+                            disabled={imgLoading || processing}
+                            type="submit"
+                            className="disabled:bg-slate-200 disabled:cursor-not-allowed inline-flex justify-center w-full transition-all duration-300 rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                            //   onClick={() => setIsOpen(false)}
+                          >
+                            {!processing ? (
+                              "Update"
+                            ) : (
+                              <ImSpinner9 size={20} className="animate-spin" />
+                            )}
+                          </button>
+                        </div>
+                      </form>
+
                       {post?.postImage && visibleImage && (
                         <div className="mb-4 relative">
                           <Image
@@ -203,7 +220,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({
                             className="rounded-md"
                           />
                           <button
-                          type="button"
+                            type="button"
                             onClick={() => setVisibleImage(false)}
                             className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 m-1 hover:bg-red-600 transition duration-150 ease-in-out"
                             aria-label="Remove image"
@@ -212,28 +229,17 @@ const EditPostModal: React.FC<EditPostModalProps> = ({
                           </button>
                         </div>
                       )}
+
                       {!visibleImage && (
-                        <ImageUpload
-                          handleImage={handleImage}
-                          setImageUrl={setImageUrl}
-                        />
+                        <div className="overflow-auto mx-auto">
+                          <ImageUpload
+                            handleImage={handleImage}
+                            setImageUrl={setImageUrl}
+                          />
+                        </div>
                       )}
                     </div>
-                    <div className="absolute bottom-0 bg-white w-full p-2">
-                      <button
-                        disabled={imgLoading || processing}
-                        type="submit"
-                        className="disabled:bg-slate-200 disabled:cursor-not-allowed inline-flex justify-center w-full transition-all duration-300 rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        //   onClick={() => setIsOpen(false)}
-                      >
-                        {!processing ? (
-                          "Update"
-                        ) : (
-                          <ImSpinner9 size={20} className="animate-spin" />
-                        )}
-                      </button>
-                    </div>
-                  </form>
+                  </div>
                   <button
                     type="button"
                     className="inline-flex absolute top-1 right-3 justify-center border border-transparent rounded-full p-2 text-sm font-medium text-rose-500 hover:text-slate-300 transition-all duration-300"

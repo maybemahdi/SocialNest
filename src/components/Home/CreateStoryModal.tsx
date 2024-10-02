@@ -102,7 +102,7 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-10 w-full"
+          className="relative z-[1000] w-full"
           onClose={() => {
             setIsOpen(false);
             setImageUrl(null);

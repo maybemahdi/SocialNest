@@ -27,7 +27,7 @@ export const PATCH = async (
     if(result.modifiedCount > 0){
         return NextResponse.json({message: "Post Updated", updated: true}, {status: 200})
     }else{
-        return NextResponse.json({message: "Post not Update", updated: false}, {status: 200})
+        return NextResponse.json({message: "Post not Updated", updated: false}, {status: 200})
     }
   } catch (error) {
     return NextResponse.json(

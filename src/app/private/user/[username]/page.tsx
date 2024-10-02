@@ -16,6 +16,7 @@ import PostCard from "@/components/Home/PostCard";
 import { IoMdPhotos } from "react-icons/io";
 import CreatePostModal from "@/components/Home/CreatePostModal";
 import Image from "next/image";
+import { ImSpinner9 } from "react-icons/im";
 
 const SingleUserPage = () => {
   const params = useParams();
@@ -23,6 +24,9 @@ const SingleUserPage = () => {
   const { username } = params;
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [isFollowed, setIsFollowed] = useState(false);
+  const [toggling, setToggling] = useState(false);
+  const [followersCount, setFollowersCount] = useState(0);
 
   const {
     posts,
@@ -69,9 +73,27 @@ const SingleUserPage = () => {
         toast.error("User not found");
         return router.push("/");
       }
+      setIsFollowed(currentUser?.following.includes(username));
+      setFollowersCount(data?.followers?.length || 0);
       return data;
     },
   });
+
+  // handle do Follow / do unFollow toggling
+  const handleFollowToggling = async () => {
+    setToggling(true);
+    const { data } = await axios.patch(`/api/followToggling`, {
+      visitorUsername: currentUser?.username,
+      toProfile: user?.username,
+    });
+    console.log(data);
+    if (data?.followers) {
+      setToggling(false);
+      setFollowersCount(data?.followers?.length);
+      setIsFollowed(data?.isFollowed)
+    }
+  };
+
   if (isLoading) return <Loading />;
   return (
     <div className="max-w-2xl mx-auto p-4">
@@ -82,7 +104,7 @@ const SingleUserPage = () => {
           className="w-full h-48 object-cover rounded-lg"
         />
         <Avatar className="absolute bottom-0 left-4 transform translate-y-1/2 w-24 h-24 border-4 border-white object-cover">
-          <AvatarImage src={user?.image} />
+          <AvatarImage src={user?.image} className="object-cover" />
           <AvatarFallback className="font-bold">
             {username.charAt(0).toUpperCase()}
           </AvatarFallback>
@@ -105,18 +127,22 @@ const SingleUserPage = () => {
             <p className="text-gray-600">@{username}</p>
           </div>
           {currentUser?.username === user?.username ? (
-            <Button>Edit Profile</Button>
+            <Button className="bg-main">Edit Profile</Button>
           ) : (
-            <Button>Follow</Button>
+            <Button onClick={handleFollowToggling} className="bg-main">
+              {!toggling && isFollowed && "Unfollow"}
+              {!toggling && !isFollowed && "Follow"}
+              {toggling && <ImSpinner9 size={20} className="animate-spin" />}
+            </Button>
           )}
         </div>
         <p className="mb-4">{user?.bio || "Developer"}</p>
         <div className="flex space-x-4 text-gray-600">
-          <span>
-            <strong>{user?.followers}</strong> Followers
+          <span className="cursor-pointer">
+            <strong>{followersCount}</strong> Followers
           </span>
-          <span>
-            <strong>{user?.following}</strong> Following
+          <span className="cursor-pointer">
+            <strong>{user?.following?.length}</strong> Following
           </span>
         </div>
       </div>
