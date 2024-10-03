@@ -17,6 +17,7 @@ import { IoMdPhotos } from "react-icons/io";
 import CreatePostModal from "@/components/Home/CreatePostModal";
 import Image from "next/image";
 import { ImSpinner9 } from "react-icons/im";
+import ShowFollowersModal from "@/components/Home/ShowFollowersModal";
 
 const SingleUserPage = () => {
   const params = useParams();
@@ -27,6 +28,8 @@ const SingleUserPage = () => {
   const [isFollowed, setIsFollowed] = useState(false);
   const [toggling, setToggling] = useState(false);
   const [followersCount, setFollowersCount] = useState(0);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [followers, setFollowers] = useState([]);
 
   const {
     posts,
@@ -75,6 +78,7 @@ const SingleUserPage = () => {
       }
       setIsFollowed(currentUser?.following.includes(username));
       setFollowersCount(data?.followers?.length || 0);
+      setFollowers(data?.followers || []);
       return data;
     },
   });
@@ -90,7 +94,8 @@ const SingleUserPage = () => {
     if (data?.followers) {
       setToggling(false);
       setFollowersCount(data?.followers?.length);
-      setIsFollowed(data?.isFollowed)
+      setFollowers(data?.followers || []);
+      setIsFollowed(data?.isFollowed);
     }
   };
 
@@ -138,9 +143,18 @@ const SingleUserPage = () => {
         </div>
         <p className="mb-4">{user?.bio || "Developer"}</p>
         <div className="flex space-x-4 text-gray-600">
-          <span className="cursor-pointer">
-            <strong>{followersCount}</strong> Followers
-          </span>
+          {followersCount > 0 ? (
+            <span
+              onClick={() => setShowFollowers(true)}
+              className="cursor-pointer"
+            >
+              <strong>{followersCount}</strong> Followers
+            </span>
+          ) : (
+            <span className="cursor-pointer">
+              <strong>{followersCount}</strong> Followers
+            </span>
+          )}
           <span className="cursor-pointer">
             <strong>{user?.following?.length}</strong> Following
           </span>
@@ -208,6 +222,11 @@ const SingleUserPage = () => {
           <div ref={loadMoreRef} style={{ height: "1px", background: "red" }} />
         )}
       </div>
+      <ShowFollowersModal
+        setShowFollowers={setShowFollowers}
+        showFollowers={showFollowers}
+        followers={followers}
+      />
     </div>
   );
 };
