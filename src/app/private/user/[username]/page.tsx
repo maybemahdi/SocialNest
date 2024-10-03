@@ -18,6 +18,8 @@ import CreatePostModal from "@/components/Home/CreatePostModal";
 import Image from "next/image";
 import { ImSpinner9 } from "react-icons/im";
 import ShowFollowersModal from "@/components/Home/ShowFollowersModal";
+import ShowFollowingModal from "@/components/Home/ShowFollowingModal";
+import Swal from "sweetalert2";
 
 const SingleUserPage = () => {
   const params = useParams();
@@ -29,7 +31,9 @@ const SingleUserPage = () => {
   const [toggling, setToggling] = useState(false);
   const [followersCount, setFollowersCount] = useState(0);
   const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
   const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
 
   const {
     posts,
@@ -79,6 +83,7 @@ const SingleUserPage = () => {
       setIsFollowed(currentUser?.following.includes(username));
       setFollowersCount(data?.followers?.length || 0);
       setFollowers(data?.followers || []);
+      setFollowing(data?.following || []);
       return data;
     },
   });
@@ -141,7 +146,7 @@ const SingleUserPage = () => {
             </Button>
           )}
         </div>
-        <p className="mb-4">{user?.bio || "Developer"}</p>
+        <p className="mb-4">{user?.bio || "No Bio Yet"}</p>
         <div className="flex space-x-4 text-gray-600">
           {followersCount > 0 ? (
             <span
@@ -155,9 +160,28 @@ const SingleUserPage = () => {
               <strong>{followersCount}</strong> Followers
             </span>
           )}
-          <span className="cursor-pointer">
-            <strong>{user?.following?.length}</strong> Following
-          </span>
+          {following?.length > 0 ? (
+            <span
+              onClick={() => {
+                if (currentUser?.username === user?.username) {
+                  setShowFollowing(true);
+                } else{
+                  Swal.fire({
+                    title: "OOPS!",
+                    text: "That thing is Private?",
+                    icon: "error"
+                  });
+                }
+              }}
+              className="cursor-pointer"
+            >
+              <strong>{user?.following?.length}</strong> Following
+            </span>
+          ) : (
+            <span>
+              <strong>{user?.following?.length}</strong> Following
+            </span>
+          )}
         </div>
       </div>
 
@@ -226,6 +250,11 @@ const SingleUserPage = () => {
         setShowFollowers={setShowFollowers}
         showFollowers={showFollowers}
         followers={followers}
+      />
+      <ShowFollowingModal
+        setShowFollowing={setShowFollowing}
+        showFollowing={showFollowing}
+        following={following}
       />
     </div>
   );
