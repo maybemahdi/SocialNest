@@ -165,11 +165,11 @@ const SingleUserPage = () => {
               onClick={() => {
                 if (currentUser?.username === user?.username) {
                   setShowFollowing(true);
-                } else{
+                } else {
                   Swal.fire({
                     title: "OOPS!",
                     text: "That thing is Private?",
-                    icon: "error"
+                    icon: "error",
                   });
                 }
               }}
@@ -237,7 +237,7 @@ const SingleUserPage = () => {
         {!isPostsLoading ? (
           posts?.pages
             .flatMap((page) => page.posts)
-            .filter((post) => post?.username === user?.username)
+            .filter((post) => post?.userId === currentUser?._id)
             .map((post) => <PostCard key={post?._id} post={post} user={user} />)
         ) : (
           <PostCardSkeleton />
