@@ -21,8 +21,7 @@ const Page: React.FC = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title =
-      status === "authenticated" ? "Redirecting..." : "SocialNest | Register";
+    document.title = "SocialNest | Register";
   }, [status]);
 
   useEffect(() => {
@@ -32,7 +31,7 @@ const Page: React.FC = () => {
     }
 
     if (status === "authenticated") {
-      router.push("/private/home");
+      router.push("/");
     } else {
       setExtraLoading(false); // Allow the register form to show
     }
@@ -67,7 +66,7 @@ const Page: React.FC = () => {
         following: [],
       };
       setIsLoading(true);
-      const { data } = await axios.post(`/public/register/api`, newUser);
+      const { data } = await axios.post(`/register/api`, newUser);
       console.log(data);
       if (data?.created) {
         toast.success("Account Created Successfully");
@@ -84,7 +83,7 @@ const Page: React.FC = () => {
           // Redirect to the desired page after successful login
           setIsLoading(false);
           form.reset();
-          router.push("/private/home");
+          router.push("/");
         }
       }
     } catch (error: unknown) {
@@ -125,7 +124,7 @@ const Page: React.FC = () => {
   };
 
   const handleSocialSignIn = async (provider: string) => {
-    await signIn(provider, { callbackUrl: "/private/home" });
+    await signIn(provider, { callbackUrl: "/" });
   };
 
   if (isLoading || status === "loading" || extraLoading) {

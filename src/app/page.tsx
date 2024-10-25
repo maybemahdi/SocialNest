@@ -1,27 +1,20 @@
-// app/page.tsx
-"use client";
+import Center from '@/components/Home/Center';
+import LeftSide from '@/components/Home/LeftSide';
+import RightSide from '@/components/Home/RightSide';
+import React from 'react';
 
-import Loading from "@/components/Loading";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-
-
-const HomePage: React.FC = () => {
-
-  const { status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status === "loading") return;
-    if (status === "authenticated") {
-      router.push("/private/home");
-    } else {
-      router.push("/public/login");
-    }
-  }, [status, router]);
-
-  return <Loading />;
+export const metadata = {
+    title: "SocialNest | Home",
 };
 
-export default HomePage;
+const Page: React.FC = () => {
+    return (
+        <div className="grid grid-cols-5 justify-center gap-6">
+            <div className="col-span-1 hidden md:flex"><LeftSide /></div>
+            <div className="md:col-span-3 col-span-5"><Center /></div>
+            <div className="col-span-1 hidden md:flex"><RightSide /></div>
+        </div>
+    );
+};
+
+export default Page;

@@ -94,10 +94,10 @@ const EditPostModal: React.FC<EditPostModalProps> = ({
     }
     try {
       setProcessing(true);
-      const { data } = await axios.patch(
-        `/private/home/api/updatePost/${post?._id}`,
-        { caption, postImage }
-      );
+      const { data } = await axios.patch(`/home/api/updatePost/${post?._id}`, {
+        caption,
+        postImage,
+      });
       if (data?.updated) {
         setProcessing(false);
         Swal.fire({

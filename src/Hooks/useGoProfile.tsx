@@ -6,7 +6,7 @@ const useGoProfile = () => {
     const router = useRouter();
 
     const goProfile = (username : string) => {
-        router.push(`/private/user/${username}`);
+        router.push(`/user/${username}`);
     };
 
     return goProfile;

@@ -71,10 +71,7 @@ const CreateStoryModal: React.FC<StoryModalProps> = ({ isOpen, setIsOpen }) => {
     };
     try {
       setIsProcessing(true);
-      const { data } = await axios.post(
-        "/private/home/api/createStory",
-        storyInfo
-      );
+      const { data } = await axios.post("/home/api/createStory", storyInfo);
       if (data?.uploaded) {
         setIsProcessing(false);
         Swal.fire({

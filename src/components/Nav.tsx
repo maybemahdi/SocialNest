@@ -9,7 +9,11 @@ import { signOut, useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { AiFillHome } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
-import { IoLogOut, IoNotificationsSharp, IoSettingsSharp } from "react-icons/io5";
+import {
+  IoLogOut,
+  IoNotificationsSharp,
+  IoSettingsSharp,
+} from "react-icons/io5";
 import toast from "react-hot-toast";
 import usePost from "@/Hooks/usePost";
 import useStory from "@/Hooks/useStory";
@@ -23,12 +27,11 @@ const Nav: React.FC = () => {
   const { refetch: postRefetch } = usePost();
   const { refetch: storyRefetch } = useStory();
 
-
   const navLinks = [
-    { name: "Home", path: "/private/home" },
-    { name: "Profile", path: `/private/user/${user?.username}` },
-    { name: "Setting", path: "/private/setting" },
-    { name: "Notifications", path: "/private/notifications" },
+    { name: "Home", path: "/" },
+    { name: "Profile", path: `/user/${user?.username}` },
+    { name: "Setting", path: "/setting" },
+    { name: "Notifications", path: "/notifications" },
   ];
 
   const handleSignOut = () => {
@@ -63,7 +66,7 @@ const Nav: React.FC = () => {
         <div>
           <Link
             onClick={handleRefetch}
-            href="/private/home"
+            href="/"
             className="font-bold text-xl text-main"
           >
             SocialNest
@@ -121,8 +124,9 @@ const Nav: React.FC = () => {
         </div>
       </div>
       <div
-        className={`lg:hidden transition-all duration-300 ${open ? "max-h-96" : "max-h-0"
-          } overflow-hidden`}
+        className={`lg:hidden transition-all duration-300 ${
+          open ? "max-h-96" : "max-h-0"
+        } overflow-hidden`}
       >
         <ul className="flex flex-col gap-4 items-start pl-[22px] py-2 bg-white border-t border-gray-200">
           {navLinks.map((link) => (

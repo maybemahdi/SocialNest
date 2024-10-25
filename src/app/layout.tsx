@@ -1,9 +1,11 @@
-// app/layout.tsx
-"use client"
-import { Poppins } from "next/font/google";
+// app/protected/layout.tsx
+"use client";
+import React from "react";
 import "./globals.css";
-import { Toaster } from "react-hot-toast";
+import { Poppins } from "next/font/google";
 import AuthProvider from "@/providers/AuthProvider";
+import Nav from "@/components/Nav";
+import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const poppins = Poppins({
@@ -17,14 +19,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
   return (
-    <html lang="en" className="bg-white">
+    <html lang="en">
       <body className={poppins.className}>
         <Toaster />
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            {children}
+            <Nav />
+            <div className="w-[95%] mx-auto mt-5">{children}</div>
           </AuthProvider>
         </QueryClientProvider>
       </body>

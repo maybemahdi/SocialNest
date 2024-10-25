@@ -81,7 +81,7 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
     };
     try {
       setProcessing(true);
-      const { data } = await axios.put("/private/home/api/createComment", {
+      const { data } = await axios.put("/home/api/createComment", {
         commentInfo,
         postId,
       });
@@ -110,7 +110,7 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
   //delete a comment
   const handleDeleteComment = async (id: string, postId: string) => {
     try {
-      const { data } = await axios.delete(`/private/home/api/deleteComment`, {
+      const { data } = await axios.delete(`/home/api/deleteComment`, {
         data: { postId, commentId: id },
       });
       if (data?.message === "Comment deleted successfully") {
@@ -130,7 +130,7 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
       .value;
     try {
       setProcessing(true);
-      const { data } = await axios.patch("/private/home/api/editComment", {
+      const { data } = await axios.patch("/home/api/editComment", {
         postId,
         commentId: commentForEdit?._id,
         comment,
@@ -167,7 +167,7 @@ const CommentsModal: React.FC<CommentsModalProps> = ({
     };
     try {
       setReplying(true);
-      const { data } = await axios.put("/private/home/api/createReply", {
+      const { data } = await axios.put("/home/api/createReply", {
         replyInfo,
         commentId,
         postId,

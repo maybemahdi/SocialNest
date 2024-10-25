@@ -19,7 +19,7 @@ const Error = () => {
                 </p>
                 <Link
                     href={"/"}
-                    className="px-5 py-4 w-fit mx-auto text-main hover:bg-main border border-secondary rounded hover:text-white transition-all duration-300 font-semibold"
+                    className="px-5 py-4 w-fit mx-auto text-main hover:bg-main border border-black rounded hover:text-white transition-all duration-300 font-semibold"
                 >
                     Back to Home
                 </Link>

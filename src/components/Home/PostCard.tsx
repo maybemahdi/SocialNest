@@ -74,7 +74,7 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
 
   const handleLikeToggle = async () => {
     try {
-      const { data } = await axios.put(`/private/home/api/handleLikeToggle`, {
+      const { data } = await axios.put(`/home/api/handleLikeToggle`, {
         username: user?.username,
         postId: post?._id,
       });
@@ -95,7 +95,7 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
 
   // delete a post
   const handleDeletePost = async (id: string) => {
-    const { data } = await axios.delete(`/private/home/api/deletePost/${id}`);
+    const { data } = await axios.delete(`/home/api/deletePost/${id}`);
     if (data?.message === "Post Deleted Successfully") {
       toast.success("Post Deleted Successfully");
       refetch();
@@ -139,11 +139,13 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
                 <DropdownMenuLabel>Manage Post</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => {
-                  setEditPostModalOpen(true)
-                }}
-                >Edit Post</DropdownMenuItem>
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setEditPostModalOpen(true);
+                  }}
+                >
+                  Edit Post
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() => handleDeletePost(post?._id)}
@@ -156,7 +158,7 @@ const PostCard: React.FC<PostProps> = ({ post, user }) => {
                 <DropdownMenuLabel>Action</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                className="cursor-pointer"
+                  className="cursor-pointer"
                   onClick={async () => {
                     try {
                       await navigator.clipboard.writeText(
