@@ -65,20 +65,31 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
         <CarouselContent>
           <CarouselItem className="basis-1/3 md:basis-1/4">
             <div className="p-1">
-              <Card
+              <div
                 className="cursor-pointer"
                 onClick={() => {
                   setIsOpen(true);
                 }}
               >
                 <CardContent className="min-h-[125px] flex flex-col aspect-square items-center justify-center p-0 relative">
-                  <Image
-                    className="w-full h-full rounded-lg object-cover"
-                    src={user?.image}
-                    alt="addStory"
-                    height={300}
-                    width={300}
-                  />
+                  {!user?.image ? (
+                    <div className="p-1">
+                      <Card>
+                        <CardContent className="min-h-[125px] flex flex-col aspect-square items-center justify-center p-0 relative">
+                          <Skeleton className="h-full w-full rounded-lg" />
+                          <div className="absolute top-0 left-0 w-full h-full bg-black opacity-0 hover:opacity-10 transition-opacity duration-300 rounded-md"></div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  ) : (
+                    <Image
+                      className="w-full h-full rounded-lg object-cover"
+                      src={user?.image}
+                      alt="addStory"
+                      height={300}
+                      width={300}
+                    />
+                  )}
                   <p className="absolute py-2 bottom-0 text-sm bg-white w-full text-center rounded-b-md">
                     Create Story
                   </p>
@@ -87,7 +98,7 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
                   </p>
                   <div className="absolute top-0 left-0 w-full h-full bg-black opacity-0 hover:opacity-10 transition-opacity duration-300 rounded-md"></div>
                 </CardContent>
-              </Card>
+              </div>
             </div>
             {/* create story modal  */}
             <CreateStoryModal isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -96,12 +107,9 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
             stories
               ?.filter((story: Story) => story?.userId === user?._id)
               .map((story: Story, index: number) => (
-                <CarouselItem
-                  key={index}
-                  className="basis-1/3 md:basis-1/4 border-0"
-                >
+                <CarouselItem key={index} className="basis-1/3 md:basis-1/4">
                   <div className="p-1">
-                    <Card
+                    <div
                       onClick={() => {
                         setIsStoryOpen(true);
                         setCurrentStory(story);
@@ -181,7 +189,7 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
                         )}
                         <div className="absolute top-0 left-0 w-full h-full bg-black opacity-0 hover:opacity-10 transition-opacity duration-300 rounded-md"></div>
                       </CardContent>
-                    </Card>
+                    </div>
                   </div>
                   <ShowStoryModal
                     isStoryOpen={isStoryOpen}
@@ -190,7 +198,7 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
                   />
                 </CarouselItem>
               ))}
-          {!isLoading ? (
+          {!isLoading &&
             stories
               ?.filter((story: Story) => story?.username !== user?.username)
               .map((story: Story, index: number) => (
@@ -204,7 +212,7 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
                       className="cursor-pointer relative"
                     >
                       <CardContent className="min-h-[125px] flex flex-col aspect-square items-center justify-center p-0 relative">
-                      {story?.storyImage && story?.caption && (
+                        {story?.storyImage && story?.caption && (
                           <>
                             <Image
                               className="w-full h-full rounded-lg object-cover"
@@ -218,9 +226,10 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
                             </p>
                             <div className="absolute top-2 left-2 flex items-center gap-1">
                               <Image
-                                className="rounded-full border-2 border-blue-500 object-cover"
+                                className="rounded-full cursor-pointer h-[20px] w-[20px] object-cover"
                                 alt="user-photo"
                                 src={story?.image}
+                                objectFit="cover"
                                 height={20}
                                 width={20}
                               />
@@ -241,9 +250,10 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
                             />
                             <div className="absolute top-2 left-2 flex items-center gap-1">
                               <Image
-                                className="rounded-full border-2 border-blue-500 object-cover"
+                                className="rounded-full cursor-pointer h-[20px] w-[20px] object-cover"
                                 alt="user-photo"
                                 src={story?.image}
+                                objectFit="cover"
                                 height={20}
                                 width={20}
                               />
@@ -262,9 +272,10 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
                             </div>
                             <div className="absolute top-2 left-2 flex items-center gap-1">
                               <Image
-                                className="rounded-full border-2 border-blue-500 object-cover"
+                                className="rounded-full cursor-pointer h-[20px] w-[20px] object-cover"
                                 alt="user-photo"
                                 src={story?.image}
+                                objectFit="cover"
                                 height={20}
                                 width={20}
                               />
@@ -284,23 +295,7 @@ const StorySlider: React.FC<StorySliderProps> = ({ user }) => {
                     currentStory={currentStory}
                   />
                 </CarouselItem>
-              ))
-          ) : (
-            <>
-              {Array.from({ length: 5 }).map((_, index) => (
-                <CarouselItem key={index} className="basis-1/3 md:basis-1/4">
-                  <div className="p-1">
-                    <Card>
-                      <CardContent className="min-h-[125px] flex flex-col aspect-square items-center justify-center p-0 relative">
-                        <Skeleton className="h-full w-full rounded-lg" />
-                        <div className="absolute top-0 left-0 w-full h-full bg-black opacity-0 hover:opacity-10 transition-opacity duration-300 rounded-md"></div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
               ))}
-            </>
-          )}
         </CarouselContent>
         <CarouselPrevious className="absolute left-0 top-1/2 transform -translate-y-1/2" />
         <CarouselNext className="absolute right-0 top-1/2 transform -translate-y-1/2" />

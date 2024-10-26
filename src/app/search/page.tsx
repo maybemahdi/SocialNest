@@ -6,7 +6,7 @@ import Image from "next/image";
 import React, { FormEvent, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 
-const LeftSide = () => {
+const SearchPage = () => {
   const [search, setSearch] = useState("");
   const goProfile = useGoProfile();
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
@@ -45,7 +45,7 @@ const LeftSide = () => {
         </button>
       </form>
 
-      <div className="flex flex-col items-center gap-4 my-5">
+      <div className="flex flex-col items-center gap-4 my-5 max-w-md">
         {allUserData?.map((user, idx) => (
           <div
             key={idx}
@@ -68,4 +68,4 @@ const LeftSide = () => {
   );
 };
 
-export default LeftSide;
+export default SearchPage;

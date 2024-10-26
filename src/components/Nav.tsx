@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 import usePost from "@/Hooks/usePost";
 import useStory from "@/Hooks/useStory";
 import useAuth from "@/Hooks/useAuth";
+import { LuSearch } from "react-icons/lu";
 
 const Nav: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -32,6 +33,7 @@ const Nav: React.FC = () => {
     { name: "Profile", path: `/user/${user?.username}` },
     { name: "Setting", path: "/setting" },
     { name: "Notifications", path: "/notifications" },
+    { name: "Search", path: "/search" },
   ];
 
   const handleSignOut = () => {
@@ -90,6 +92,7 @@ const Nav: React.FC = () => {
                   {link.name === "Notifications" && (
                     <IoNotificationsSharp size={30} />
                   )}
+                  {link.name === "Search" && <LuSearch size={30} />}
                 </Link>
               </li>
             ))}
